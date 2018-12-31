@@ -20,12 +20,12 @@ loaded into the data segment
 #elif defined _arch_dreamcast
     #include <unistd.h>
 #else
-    #include <sys/uio.h>
+    #include "sys/uio.h"
     #include <unistd.h>
 #endif
 
 #include "wl_def.h"
-#pragma hdrstop
+//#pragma hdrstop
 
 #define THREEBYTEGRSTARTS
 
@@ -694,7 +694,7 @@ void CA_Startup (void)
 
 void CA_Shutdown (void)
 {
-    int i,start;
+    int i,start = 0;
 
     if(maphandle != -1)
         close(maphandle);
@@ -804,7 +804,7 @@ void CA_CacheAdlibSoundChunk (int chunk)
 
 void CA_LoadAllSounds (void)
 {
-    unsigned start,i;
+    unsigned start = 0,i;
 
     switch (oldsoundmode)
     {

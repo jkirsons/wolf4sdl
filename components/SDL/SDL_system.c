@@ -19,12 +19,12 @@ void SDL_Delay(Uint32 ms)
     const TickType_t xDelay = ms / portTICK_PERIOD_MS;
     vTaskDelay( xDelay );
 }
-
+/*
 char *SDL_GetError(void)
 {
     return (char *)"";
 }
-
+*/
 int SDL_Init(Uint32 flags)
 {
     if(flags == SDL_INIT_VIDEO)

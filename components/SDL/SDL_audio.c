@@ -105,3 +105,10 @@ void SDL_UnlockAudio(void)
 	//	 xSemaphoreGive( xSemaphoreAudio );
 }
 
+/*
+ * Moved here from SDL_mixer.c, since it relies on internals of an opened
+ *  audio device (and is deprecated, by the way!).
+ */
+void SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume)
+{
+}

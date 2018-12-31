@@ -44,5 +44,109 @@ int SDL_BuildAudioCVT(SDL_AudioCVT *cvt, Uint16 src_format, Uint8 src_channels, 
 int SDL_ConvertAudio(SDL_AudioCVT *cvt);
 void SDL_LockAudio(void);
 void SDL_UnlockAudio(void);
+void SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume);
+
+
+/**
+ *  \brief Audio format flags.
+ *
+ *  These are what the 16 bits in SDL_AudioFormat currently mean...
+ *  (Unspecified bits are always zero).
+ *
+ *  \verbatim
+    ++-----------------------sample is signed if set
+    ||
+    ||       ++-----------sample is bigendian if set
+    ||       ||
+    ||       ||          ++---sample is float if set
+    ||       ||          ||
+    ||       ||          || +---sample bit size---+
+    ||       ||          || |                     |
+    15 14 13 12 11 10 09 08 07 06 05 04 03 02 01 00
+    \endverbatim
+ *
+ *  There are macros in SDL 2.0 and later to query these bits.
+ */
+typedef Uint16 SDL_AudioFormat;
+
+/**
+ *  \name Audio flags
+ */
+/* @{ */
+
+#define SDL_AUDIO_MASK_BITSIZE       (0xFF)
+#define SDL_AUDIO_MASK_DATATYPE      (1<<8)
+#define SDL_AUDIO_MASK_ENDIAN        (1<<12)
+#define SDL_AUDIO_MASK_SIGNED        (1<<15)
+#define SDL_AUDIO_BITSIZE(x)         (x & SDL_AUDIO_MASK_BITSIZE)
+#define SDL_AUDIO_ISFLOAT(x)         (x & SDL_AUDIO_MASK_DATATYPE)
+#define SDL_AUDIO_ISBIGENDIAN(x)     (x & SDL_AUDIO_MASK_ENDIAN)
+#define SDL_AUDIO_ISSIGNED(x)        (x & SDL_AUDIO_MASK_SIGNED)
+#define SDL_AUDIO_ISINT(x)           (!SDL_AUDIO_ISFLOAT(x))
+#define SDL_AUDIO_ISLITTLEENDIAN(x)  (!SDL_AUDIO_ISBIGENDIAN(x))
+#define SDL_AUDIO_ISUNSIGNED(x)      (!SDL_AUDIO_ISSIGNED(x))
+
+/**
+ *  \name Audio format flags
+ *
+ *  Defaults to LSB byte order.
+ */
+/* @{ */
+#define AUDIO_U8        0x0008  /**< Unsigned 8-bit samples */
+#define AUDIO_S8        0x8008  /**< Signed 8-bit samples */
+#define AUDIO_U16LSB    0x0010  /**< Unsigned 16-bit samples */
+#define AUDIO_S16LSB    0x8010  /**< Signed 16-bit samples */
+#define AUDIO_U16MSB    0x1010  /**< As above, but big-endian byte order */
+#define AUDIO_S16MSB    0x9010  /**< As above, but big-endian byte order */
+#define AUDIO_U16       AUDIO_U16LSB
+#define AUDIO_S16       AUDIO_S16LSB
+/* @} */
+
+/**
+ *  \name int32 support
+ */
+/* @{ */
+#define AUDIO_S32LSB    0x8020  /**< 32-bit integer samples */
+#define AUDIO_S32MSB    0x9020  /**< As above, but big-endian byte order */
+#define AUDIO_S32       AUDIO_S32LSB
+/* @} */
+
+/**
+ *  \name float32 support
+ */
+/* @{ */
+#define AUDIO_F32LSB    0x8120  /**< 32-bit floating point samples */
+#define AUDIO_F32MSB    0x9120  /**< As above, but big-endian byte order */
+#define AUDIO_F32       AUDIO_F32LSB
+/* @} */
+
+/**
+ *  \name Native audio byte ordering
+ */
+/* @{ */
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+#define AUDIO_U16SYS    AUDIO_U16LSB
+#define AUDIO_S16SYS    AUDIO_S16LSB
+#define AUDIO_S32SYS    AUDIO_S32LSB
+#define AUDIO_F32SYS    AUDIO_F32LSB
+#else
+#define AUDIO_U16SYS    AUDIO_U16MSB
+#define AUDIO_S16SYS    AUDIO_S16MSB
+#define AUDIO_S32SYS    AUDIO_S32MSB
+#define AUDIO_F32SYS    AUDIO_F32MSB
+#endif
+/* @} */
+
+/**
+ *  SDL Audio Device IDs.
+ *
+ *  A successful call to SDL_OpenAudio() is always device id 1, and legacy
+ *  SDL audio APIs assume you want this device ID. SDL_OpenAudioDevice() calls
+ *  always returns devices >= 2 on success. The legacy calls are good both
+ *  for backwards compatibility and when you don't care about multiple,
+ *  specific, or capture devices.
+ */
+typedef Uint32 SDL_AudioDeviceID;
+#define SDL_MIX_MAXVOLUME 128
 
 #endif

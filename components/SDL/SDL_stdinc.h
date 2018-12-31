@@ -36,7 +36,7 @@
 #define HAVE_INTTYPES_H
 #define HAVE_CTYPE_H
 #define HAVE_STRING_H
-//#include "SDL_config.h"
+#include "SDL_config.h"
 
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -420,7 +420,7 @@ typedef struct _SDL_iconv_t *SDL_iconv_t;
 
 /* force builds using Clang's static analysis tools to use literal C runtime
    here, since there are possibly tests that are ineffective otherwise. */
-#if defined(__clang_analyzer__) && !defined(SDL_DISABLE_ANALYZE_MACROS)
+#if 1 //defined(__clang_analyzer__) && !defined(SDL_DISABLE_ANALYZE_MACROS)
 #define SDL_malloc malloc
 #define SDL_calloc calloc
 #define SDL_realloc realloc
@@ -445,6 +445,16 @@ typedef struct _SDL_iconv_t *SDL_iconv_t;
 #define SDL_snprintf snprintf
 #define SDL_vsnprintf vsnprintf
 #endif
+
+extern DECLSPEC int SDLCALL SDL_GetNumAllocations(void);
+
+extern DECLSPEC char *SDLCALL SDL_getenv(const char *name);
+extern DECLSPEC int SDLCALL SDL_setenv(const char *name, const char *value, int overwrite);
+
+extern DECLSPEC void SDLCALL SDL_qsort(void *base, size_t nmemb, size_t size, int (*compare) (const void *, const void *));
+
+extern DECLSPEC int SDLCALL SDL_abs(int x);
+
 /*
 SDL_FORCE_INLINE void *SDL_memcpy4(SDL_OUT_BYTECAP(dwords*4) void *dst, SDL_IN_BYTECAP(dwords*4) const void *src, size_t dwords)
 {

@@ -82,7 +82,7 @@ void PM_Startup()
     uint8_t *ptr = (uint8_t *) PMPageData;
     for(i = 0; i < ChunksInFile; i++)
     {
-        if(i >= PMSpriteStart && i < PMSoundStart || i == ChunksInFile - 1)
+        if(((i >= PMSpriteStart) && (i < PMSoundStart)) || i == ChunksInFile - 1)
         {
             size_t offs = ptr - (uint8_t *) PMPageData;
 

@@ -2,6 +2,7 @@
 #define SDL_h_
 #include <stdint.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include "SDL_input.h"
 #include "SDL_stdinc.h"
 #include "SDL_endian.h"
@@ -30,9 +31,6 @@ typedef int SDLMod;
 #define SDLK_KP1 0
 #define SDLK_PRINT 0
 
-#define AUDIO_S16SYS 16
-#define AUDIO_S8 8
-
 #define SDL_BUTTON_LEFT 0
 #define SDL_BUTTON_RIGHT 1
 #define SDL_BUTTON_MIDDLE 2
@@ -40,6 +38,7 @@ typedef int SDLMod;
 #define SDLK_SCROLLOCK 1000
 
 #define SDL_strlcpy strlcpy
+#define SDL_snprintf snprintf
 
 #define SDL_INIT_TIMER          0x00000001u
 #define SDL_INIT_AUDIO          0x00000010u

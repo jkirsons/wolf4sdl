@@ -33,7 +33,7 @@ void SDL_Quit(void);
 
 void SDL_Delay(Uint32 ms);
 void SDL_ClearError(void);
-char *SDL_GetError(void);
+const char *SDL_GetError(void);
 
 struct SDL_mutex;
 typedef struct SDL_mutex SDL_mutex;

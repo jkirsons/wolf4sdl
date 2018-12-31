@@ -16,6 +16,14 @@ int SDL_ShowCursor(int toggle)
     return 0;
 }
 
+Uint32 SDL_GetMouseState(int* x,int* y)
+{
+    return 0;
+}
+void SDL_WarpMouse(Uint16 x, Uint16 y)
+{
+    
+}
 
 /*
   Simple DirectMedia Layer
