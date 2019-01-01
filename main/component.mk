@@ -9,4 +9,4 @@
 
 #include $(IDF_PATH)/make/component_common.mk
 
-#COMPONENT_ADD_INCLUDEDIRS += ../../Engine/src
+COMPONENT_ADD_INCLUDEDIRS += ../components/wolf4sdl

@@ -25,7 +25,7 @@ loaded into the data segment
 #endif
 
 #include "wl_def.h"
-//#pragma hdrstop
+#pragma hdrstop
 
 #define THREEBYTEGRSTARTS
 

@@ -112,3 +112,10 @@ void SDL_UnlockAudio(void)
 void SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume)
 {
 }
+
+SDL_AudioSpec * SDL_LoadWAV_RW (SDL_RWops *src, int freesrc,
+		SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len)
+{
+	SDL_AudioSpec * as = malloc(sizeof(SDL_AudioSpec));
+	return as;
+}

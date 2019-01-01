@@ -7,6 +7,8 @@
 #include "freertos/task.h"
 #include "freertos/queue.h"
 
+#include "SDL_rwops.h"
+
 // Needed for calling the actual sound output.
 #define SAMPLECOUNT		512
 #define SAMPLERATE		11025 * 4	// Hz
@@ -46,6 +48,8 @@ void SDL_LockAudio(void);
 void SDL_UnlockAudio(void);
 void SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume);
 
+SDL_AudioSpec * SDL_LoadWAV_RW (SDL_RWops *src, int freesrc,
+		SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len);
 
 /**
  *  \brief Audio format flags.

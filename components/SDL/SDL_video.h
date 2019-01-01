@@ -86,6 +86,10 @@ typedef struct SDL_Surface {
 /* Evaluates to true if the surface needs to be locked before access */
 #define SDL_MUSTLOCK(S) (((S)->flags & SDL_RLEACCEL) != 0)
 
+/** @name flags for SDL_SetPalette() */
+/*@{*/
+#define SDL_LOGPAL 0x01
+#define SDL_PHYSPAL 0x02
 
 typedef struct{
   Uint32 hw_available:1;
@@ -125,6 +129,46 @@ void SDL_UpdateRect(SDL_Surface *screen, Sint32 x, Sint32 y, Sint32 w, Sint32 h)
 SDL_Rect **SDL_ListModes(SDL_PixelFormat *format, Uint32 flags);
 SDL_VideoInfo *SDL_GetVideoInfo(void);
 char *SDL_VideoDriverName(char *namebuf, int maxlen);
+
+/*
+ * You should call SDL_BlitSurface() unless you know exactly how SDL
+ * blitting works internally and how to use the other blit functions.
+ */
+#define SDL_BlitSurface SDL_UpperBlit
+
+/** This is the public blit function, SDL_BlitSurface(), and it performs
+ *  rectangle validation and clipping before passing it to SDL_LowerBlit()
+ */
+extern DECLSPEC int SDLCALL SDL_UpperBlit
+			(SDL_Surface *src, SDL_Rect *srcrect,
+			 SDL_Surface *dst, SDL_Rect *dstrect);
+/** This is a semi-private blit function and it performs low-level surface
+ *  blitting only.
+ */
+extern DECLSPEC int SDLCALL SDL_LowerBlit
+			(SDL_Surface *src, SDL_Rect *srcrect,
+			 SDL_Surface *dst, SDL_Rect *dstrect);
+
+/**
+ * Sets a portion of the colormap for a given 8-bit surface.
+ * 'flags' is one or both of:
+ * SDL_LOGPAL  -- set logical palette, which controls how blits are mapped
+ *                to/from the surface,
+ * SDL_PHYSPAL -- set physical palette, which controls how pixels look on
+ *                the screen
+ * Only screens have physical palettes. Separate change of physical/logical
+ * palettes is only possible if the screen has SDL_HWPALETTE set.
+ *
+ * The return value is 1 if all colours could be set as requested, and 0
+ * otherwise.
+ *
+ * SDL_SetColors() is equivalent to calling this function with
+ *     flags = (SDL_LOGPAL|SDL_PHYSPAL).
+ */
+extern DECLSPEC int SDLCALL SDL_SetPalette(SDL_Surface *surface, int flags,
+				   SDL_Color *colors, int firstcolor,
+				   int ncolors);
+
 
 extern SemaphoreHandle_t display_mutex;
 void SDL_LockDisplay();
