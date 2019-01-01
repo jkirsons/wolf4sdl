@@ -11,6 +11,7 @@
 #include "SDL_event.h"
 #include "SDL_system.h"
 #include "SDL_scancode.h"
+#include "SDL_blit.h"
 
 typedef int SDLMod;
 //typedef int SDL_Joystick;

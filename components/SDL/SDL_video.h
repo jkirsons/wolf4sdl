@@ -45,6 +45,7 @@ typedef struct{
   Uint16 w, h;
 } SDL_Rect;
 
+
 typedef struct SDL_Surface {
         Uint32 flags;                           /* Read-only */
         SDL_PixelFormat *format;                /* Read-only */
@@ -52,14 +53,30 @@ typedef struct SDL_Surface {
         Uint16 pitch;                           /* Read-only */
         void *pixels;                           /* Read-write */
 
-        /* clipping information */
-        SDL_Rect clip_rect;                     /* Read-only */
+        int offset;				/**< Private */
+
+        /** Hardware-specific surface info */
+        struct private_hwdata *hwdata;
+
+        /** clipping information */
+        SDL_Rect clip_rect;			/**< Read-only */
+        Uint32 unused1;				/**< for binary compatibility */
+
+        /** Allow recursive locks */
+        Uint32 locked;				/**< Private */
+
+        /** info for fast blit mapping to other surfaces */
+        struct SDL_BlitMap *map;		/**< Private */
+
+        /** format version, bumped at every change to invalidate blit maps */
+        unsigned int format_version;		/**< Private */
 
         /* Reference count -- used when freeing surface */
         int refcount;                           /* Read-mostly */
 
 	/* This structure also contains private fields not shown here */
 } SDL_Surface;
+
 
 /* These are the currently supported flags for the SDL_surface */
 /* Available for SDL_CreateRGBSurface() or SDL_SetVideoMode() */
