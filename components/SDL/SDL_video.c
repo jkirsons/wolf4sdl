@@ -1,5 +1,5 @@
 #include "SDL_video.h"
-
+#include "SDL.h"
 
 
 #define SPI_BUS TFT_VSPI_HOST
@@ -47,11 +47,6 @@ void SDL_WM_SetCaption(const char *title, const char *icon)
 char *SDL_GetKeyName(SDLKey key)
 {
     return (char *)"";
-}
-
-SDL_Keymod SDL_GetModState(void)
-{
-    return (SDL_Keymod)0;
 }
 
 IRAM_ATTR Uint32 SDL_GetTicks(void)
@@ -232,142 +227,8 @@ int SDL_SetPalette(SDL_Surface *screen, int which,
     return SDL_SetColors(screen, colors, firstcolor, ncolors);
 }
 
-/* 
- * Set up a blit between two surfaces -- split into three parts:
- * The upper part, SDL_UpperBlit(), performs clipping and rectangle 
- * verification.  The lower part is a pointer to a low level
- * accelerated blitting function.
- *
- * These parts are separated out and each used internally by this 
- * library in the optimimum places.  They are exported so that if
- * you know exactly what you are doing, you can optimize your code
- * by calling the one(s) you need.
- */
-int SDL_LowerBlit (SDL_Surface *src, SDL_Rect *srcrect,
-				SDL_Surface *dst, SDL_Rect *dstrect)
-{
-	SDL_blit do_blit;
-	SDL_Rect hw_srcrect;
-	SDL_Rect hw_dstrect;
-
-	/* Check to make sure the blit mapping is valid */
-	if ( (src->map->dst != dst) ||
-             (src->map->dst->format_version != src->map->format_version) ) {
-		if ( SDL_MapSurface(src, dst) < 0 ) {
-			return(-1);
-		}
-	}
-
-	/* Figure out which blitter to use */
-	if ( (src->flags & SDL_HWACCEL) == SDL_HWACCEL ) {
-		if ( src == SDL_VideoSurface ) {
-			hw_srcrect = *srcrect;
-			hw_srcrect.x += current_video->offset_x;
-			hw_srcrect.y += current_video->offset_y;
-			srcrect = &hw_srcrect;
-		}
-		if ( dst == SDL_VideoSurface ) {
-			hw_dstrect = *dstrect;
-			hw_dstrect.x += current_video->offset_x;
-			hw_dstrect.y += current_video->offset_y;
-			dstrect = &hw_dstrect;
-		}
-		do_blit = src->map->hw_blit;
-	} else {
-		do_blit = src->map->sw_blit;
-	}
-	return(do_blit(src, srcrect, dst, dstrect));
-}
-
-
 int SDL_UpperBlit (SDL_Surface *src, SDL_Rect *srcrect,
 		   SDL_Surface *dst, SDL_Rect *dstrect)
 {
-        SDL_Rect fulldst;
-	int srcx, srcy, w, h;
-
-	/* Make sure the surfaces aren't locked */
-	if ( ! src || ! dst ) {
-		SDL_SetError("SDL_UpperBlit: passed a NULL surface");
-		return(-1);
-	}
-	if ( src->locked || dst->locked ) {
-		SDL_SetError("Surfaces must not be locked during blit");
-		return(-1);
-	}
-
-	/* If the destination rectangle is NULL, use the entire dest surface */
-	if ( dstrect == NULL ) {
-	        fulldst.x = fulldst.y = 0;
-		dstrect = &fulldst;
-	}
-
-	/* clip the source rectangle to the source surface */
-	if(srcrect) {
-	        int maxw, maxh;
-	
-		srcx = srcrect->x;
-		w = srcrect->w;
-		if(srcx < 0) {
-		        w += srcx;
-			dstrect->x -= srcx;
-			srcx = 0;
-		}
-		maxw = src->w - srcx;
-		if(maxw < w)
-			w = maxw;
-
-		srcy = srcrect->y;
-		h = srcrect->h;
-		if(srcy < 0) {
-		        h += srcy;
-			dstrect->y -= srcy;
-			srcy = 0;
-		}
-		maxh = src->h - srcy;
-		if(maxh < h)
-			h = maxh;
-	    
-	} else {
-	        srcx = srcy = 0;
-		w = src->w;
-		h = src->h;
-	}
-
-	/* clip the destination rectangle against the clip rectangle */
-	{
-	        SDL_Rect *clip = &dst->clip_rect;
-		int dx, dy;
-
-		dx = clip->x - dstrect->x;
-		if(dx > 0) {
-			w -= dx;
-			dstrect->x += dx;
-			srcx += dx;
-		}
-		dx = dstrect->x + w - clip->x - clip->w;
-		if(dx > 0)
-			w -= dx;
-
-		dy = clip->y - dstrect->y;
-		if(dy > 0) {
-			h -= dy;
-			dstrect->y += dy;
-			srcy += dy;
-		}
-		dy = dstrect->y + h - clip->y - clip->h;
-		if(dy > 0)
-			h -= dy;
-	}
-
-	if(w > 0 && h > 0) {
-	        SDL_Rect sr;
-	        sr.x = srcx;
-		sr.y = srcy;
-		sr.w = dstrect->w = w;
-		sr.h = dstrect->h = h;
-		return SDL_LowerBlit(src, &sr, dst, dstrect);
-	}
-	dstrect->w = dstrect->h = 0;
-	return 0;
+    return 0;
 }

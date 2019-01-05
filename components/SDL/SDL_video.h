@@ -1,7 +1,10 @@
 #ifndef SDL_TFT_H
 #define SDL_TFT_H
 
-#include "SDL.h"
+#include "SDL_stdinc.h"
+#include "SDL_error.h"
+#include "SDL_rwops.h"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -39,12 +42,6 @@ typedef struct SDL_PixelFormat {
   Uint32 colorkey;
   Uint8  alpha;
 } SDL_PixelFormat;
-
-typedef struct{
-  Sint16 x, y;
-  Uint16 w, h;
-} SDL_Rect;
-
 
 typedef struct SDL_Surface {
         Uint32 flags;                           /* Read-only */
@@ -108,6 +105,14 @@ typedef struct SDL_Surface {
 #define SDL_LOGPAL 0x01
 #define SDL_PHYSPAL 0x02
 
+/** @name Transparency definitions
+ *  These define alpha as the opacity of a surface
+ */
+/*@{*/
+#define SDL_ALPHA_OPAQUE 255
+#define SDL_ALPHA_TRANSPARENT 0
+/*@}*/
+
 typedef struct{
   Uint32 hw_available:1;
   Uint32 wm_available:1;
@@ -122,6 +127,10 @@ typedef struct{
   SDL_PixelFormat *vfmt;
 } SDL_VideoInfo;
 
+/** typedef for private surface blitting functions */
+typedef int (*SDL_blit)(struct SDL_Surface *src, SDL_Rect *srcrect,
+			struct SDL_Surface *dst, SDL_Rect *dstrect);
+
 typedef int SDLKey;
 
 void SDL_WM_SetCaption(const char *title, const char *icon);
@@ -131,7 +140,7 @@ int SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, Uint32 color);
 SDL_Surface *SDL_CreateRGBSurface(Uint32 flags, int width, int height, int depth, Uint32 Rmask, Uint32 Gmask, Uint32 Bmask, Uint32 Amask);
 char *SDL_GetKeyName(SDLKey key);
 Uint32 SDL_GetTicks(void);
-SDL_Keymod SDL_GetModState(void);
+
 SDL_Surface *SDL_GetVideoSurface(void);
 Uint32 SDL_MapRGB(SDL_PixelFormat *fmt, Uint8 r, Uint8 g, Uint8 b);
 int SDL_SetColors(SDL_Surface *surface, SDL_Color *colors, int firstcolor, int ncolors);

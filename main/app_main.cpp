@@ -11,7 +11,10 @@
 
 #include "sys/uio.h"
 #include "wl_main.h"
-
+extern "C"
+{
+#include "SDL.h"
+}
 
 void wolfTask(void *pvParameters)
 {

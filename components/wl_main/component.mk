@@ -9,5 +9,5 @@
 
 #include $(IDF_PATH)/make/component_common.mk
 
-COMPONENT_ADD_INCLUDEDIRS += ../SDL ../SDL2_mixer
-CPPFLAGS += -Wno-error=maybe-uninitialized -Wno-error=parentheses -Wno-error=switch -Wno-error=unknown-pragmas -Wno-error=narrowing
+COMPONENT_ADD_INCLUDEDIRS += ../SDL ../SDL_mixer-1.2.12
+CPPFLAGS += -Wno-error=maybe-uninitialized -Wno-error=parentheses -Wno-error=switch -Wno-error=unknown-pragmas -Wno-error=narrowing -Wno-error=char-subscripts

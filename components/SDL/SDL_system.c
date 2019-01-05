@@ -9,11 +9,6 @@ struct SDL_mutex
 #endif
 };
 
-void SDL_ClearError(void)
-{
-
-}
-
 void SDL_Delay(Uint32 ms)
 {
     const TickType_t xDelay = ms / portTICK_PERIOD_MS;

@@ -576,3 +576,7 @@ SDL_JoystickPowerLevel SDL_JoystickCurrentPowerLevel(SDL_Joystick * joystick)
     return pl;
 }
 
+SDL_Keymod SDL_GetModState(void)
+{
+    return (SDL_Keymod)0;
+}

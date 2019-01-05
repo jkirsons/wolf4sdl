@@ -32,7 +32,7 @@ int SDL_Init(Uint32 flags);
 void SDL_Quit(void);
 
 void SDL_Delay(Uint32 ms);
-void SDL_ClearError(void);
+
 const char *SDL_GetError(void);
 
 struct SDL_mutex;

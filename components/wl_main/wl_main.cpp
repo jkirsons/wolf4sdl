@@ -9,9 +9,11 @@
 #include "wl_def.h"
 #pragma hdrstop
 #include "wl_atmos.h"
-#include <SDL_syswm.h>
-
-
+extern "C"
+{
+#include <SDL.h>
+}
+#include "esp_attr.h"
 /*
 =============================================================================
 
@@ -24,7 +26,7 @@
 =============================================================================
 */
 
-extern byte signon[];
+extern EXT_RAM_ATTR byte signon[];
 
 /*
 =============================================================================
@@ -834,8 +836,8 @@ void SignonScreen (void)                        // VGA version
 {
     VL_SetVGAPlaneMode ();
 
-    VL_MungePic (signon,320,200);
-    VL_MemToScreen (signon,320,200,0,0);
+    VL_MungePic ((byte *)signon,320,200);
+    VL_MemToScreen ((byte *)signon,320,200,0,0);
 }
 
 
@@ -1441,7 +1443,7 @@ void Quit (const char *errorStr, ...)
     if (!pictable)  // don't try to display the red box before it's loaded
     {
         ShutdownId();
-        if (error && *error)
+        if (/*error &&*/ *error)
         {
 #ifdef NOTYET
             SetTextCursor(0,0);
@@ -1455,7 +1457,7 @@ void Quit (const char *errorStr, ...)
         exit(1);
     }
 
-    if (!error || !*error)
+    if (/*!error ||*/ !*error)
     {
 #ifdef NOTYET
         #ifndef JAPAN
@@ -1475,7 +1477,7 @@ void Quit (const char *errorStr, ...)
 
     ShutdownId ();
 
-    if (error && *error)
+    if (/*error &&*/ *error)
     {
 #ifdef NOTYET
         memcpy((byte *)0xb8000,screen+7,7*160);
@@ -1489,7 +1491,7 @@ void Quit (const char *errorStr, ...)
         exit(1);
     }
     else
-    if (!error || !(*error))
+    if (/*!error ||*/ !(*error))
     {
 #ifdef NOTYET
         #ifndef JAPAN

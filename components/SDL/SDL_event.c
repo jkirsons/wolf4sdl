@@ -232,3 +232,13 @@ void inputInit()
 
 	printf("keyboard: GPIO task created.\n");
 }
+
+int SDL_WaitEvent (SDL_Event *event)
+{
+    return 0;
+}
+
+Uint8 SDL_EventState (Uint32 type, int state)
+{
+	return 0;
+}

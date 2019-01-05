@@ -9,4 +9,4 @@
 
 #include $(IDF_PATH)/make/component_common.mk
 
-COMPONENT_ADD_INCLUDEDIRS += ../components/wolf4sdl
+COMPONENT_ADD_INCLUDEDIRS += ../components/wl_main ../components/SDL ../components/SDL_mixer-1.2.12

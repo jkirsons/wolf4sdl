@@ -448,12 +448,19 @@ typedef struct _SDL_iconv_t *SDL_iconv_t;
 
 extern DECLSPEC int SDLCALL SDL_GetNumAllocations(void);
 
-extern DECLSPEC char *SDLCALL SDL_getenv(const char *name);
+//extern DECLSPEC char *SDLCALL SDL_getenv(const char *name);
 extern DECLSPEC int SDLCALL SDL_setenv(const char *name, const char *value, int overwrite);
 
 extern DECLSPEC void SDLCALL SDL_qsort(void *base, size_t nmemb, size_t size, int (*compare) (const void *, const void *));
 
-extern DECLSPEC int SDLCALL SDL_abs(int x);
+//extern DECLSPEC int SDLCALL SDL_abs(int x);
+#define SDL_abs		abs
+#define SDL_getenv	getenv
+
+typedef struct{
+  Sint16 x, y;
+  Uint16 w, h;
+} SDL_Rect;
 
 /*
 SDL_FORCE_INLINE void *SDL_memcpy4(SDL_OUT_BYTECAP(dwords*4) void *dst, SDL_IN_BYTECAP(dwords*4) const void *src, size_t dwords)

@@ -18,8 +18,10 @@
 #	include <string.h>
 #	include <stdarg.h>
 #endif
+extern "C"
+{
 #include <SDL.h>
-
+}
 #if !defined O_BINARY
 #	define O_BINARY 0
 #endif

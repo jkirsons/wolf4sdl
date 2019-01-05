@@ -724,5 +724,6 @@ extern DECLSPEC void SDLCALL SDL_JoystickClose(SDL_Joystick * joystick);
  */
 extern DECLSPEC SDL_JoystickPowerLevel SDLCALL SDL_JoystickCurrentPowerLevel(SDL_Joystick * joystick);
 
+SDL_Keymod SDL_GetModState(void);
 
 #endif /* SDL_keycode_h_ */

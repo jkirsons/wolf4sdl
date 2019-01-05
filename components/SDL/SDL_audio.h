@@ -48,8 +48,39 @@ void SDL_LockAudio(void);
 void SDL_UnlockAudio(void);
 void SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume);
 
-SDL_AudioSpec * SDL_LoadWAV_RW (SDL_RWops *src, int freesrc,
-		SDL_AudioSpec *spec, Uint8 **audio_buf, Uint32 *audio_len);
+/**
+ *  This function loads a WAVE from the data source, automatically freeing
+ *  that source if \c freesrc is non-zero.  For example, to load a WAVE file,
+ *  you could do:
+ *  \code
+ *      SDL_LoadWAV_RW(SDL_RWFromFile("sample.wav", "rb"), 1, ...);
+ *  \endcode
+ *
+ *  If this function succeeds, it returns the given SDL_AudioSpec,
+ *  filled with the audio data format of the wave data, and sets
+ *  \c *audio_buf to a malloc()'d buffer containing the audio data,
+ *  and sets \c *audio_len to the length of that audio buffer, in bytes.
+ *  You need to free the audio buffer with SDL_FreeWAV() when you are
+ *  done with it.
+ *
+ *  This function returns NULL and sets the SDL error message if the
+ *  wave file cannot be opened, uses an unknown data format, or is
+ *  corrupt.  Currently raw and MS-ADPCM WAVE files are supported.
+ */
+extern DECLSPEC SDL_AudioSpec *SDLCALL SDL_LoadWAV_RW(SDL_RWops * src,
+                                                      int freesrc,
+                                                      SDL_AudioSpec * spec,
+                                                      Uint8 ** audio_buf,
+                                                      Uint32 * audio_len);
+
+/**
+ *  Loads a WAV from a file.
+ *  Compatibility convenience function.
+ */
+#define SDL_LoadWAV(file, spec, audio_buf, audio_len) \
+    SDL_LoadWAV_RW(SDL_RWFromFile(file, "rb"),1, spec,audio_buf,audio_len)
+
+
 
 /**
  *  \brief Audio format flags.
