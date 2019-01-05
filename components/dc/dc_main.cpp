@@ -24,16 +24,16 @@ void DC_CheckArguments() {
     bool  audioBufferGiven = false;
     int   length = 0;
 
-    fp = fopen("/cd/data/wolf3d/args.txt", "r");
+    fp = __fopen("/cd/data/wolf3d/args.txt", "r");
     if (!fp)
         return;
-    fseek(fp, 0, SEEK_END);
-    length = ftell (fp);
-    fseek(fp, 0, SEEK_SET);
+    __fseek(fp, 0, SEEK_END);
+    length = __ftell( (fp);
+    __fseek(fp, 0, SEEK_SET);
     buf = (char *)malloc(length + 2);
-    fread(buf, 1, length, fp);
+    __fread(buf, 1, length, fp);
     buf[length] = 0;
-    fclose(fp);
+    __fclose(fp);
     result = strtok(buf, " ");
 
     while (result != NULL) {
@@ -285,27 +285,27 @@ int DC_SetMission(char *path) {
     FILE *fp;
 
     sprintf(fname, "%s/MAPHEAD.SOD", path);
-    fp = fopen(fname, "r");
+    fp = __fopen(fname, "r");
     if(fp) {
-        fclose(fp);
+        __fclose(fp);
         last_mission = 1;
         mission1 = 1;
         missions++;
     }
 
     sprintf(fname, "%s/MAPHEAD.SD2", path);
-    fp = fopen(fname, "r");
+    fp = __fopen(fname, "r");
     if(fp) {
-        fclose(fp);
+        __fclose(fp);
         last_mission = 2;
         mission2 = 1;
         missions++;
     }
 
     sprintf(fname, "%s/MAPHEAD.SD3", path);
-    fp = fopen(fname, "r");
+    fp = __fopen(fname, "r");
     if(fp) {
-        fclose(fp);
+        __fclose(fp);
         last_mission = 3;
         mission3 = 1;
         missions++;

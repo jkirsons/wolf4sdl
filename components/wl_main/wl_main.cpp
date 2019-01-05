@@ -75,7 +75,7 @@ boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
 
-char    configdir[256] = "";
+char    configdir[256] = "/sd/data/Wolfenstein 3D/base";
 char    configname[13] = "config.";
 
 //
@@ -406,15 +406,15 @@ boolean SaveTheGame(FILE *file,int x,int y)
     checksum = 0;
 
     DiskFlopAnim(x,y);
-    fwrite(&gamestate,sizeof(gamestate),1,file);
+    __fwrite(&gamestate,sizeof(gamestate),1,file);
     checksum = DoChecksum((byte *)&gamestate,sizeof(gamestate),checksum);
 
     DiskFlopAnim(x,y);
-    fwrite(&LevelRatios[0],sizeof(LRstruct)*LRpack,1,file);
+    __fwrite(&LevelRatios[0],sizeof(LRstruct)*LRpack,1,file);
     checksum = DoChecksum((byte *)&LevelRatios[0],sizeof(LRstruct)*LRpack,checksum);
 
     DiskFlopAnim(x,y);
-    fwrite(tilemap,sizeof(tilemap),1,file);
+    __fwrite(tilemap,sizeof(tilemap),1,file);
     checksum = DoChecksum((byte *)tilemap,sizeof(tilemap),checksum);
     DiskFlopAnim(x,y);
 
@@ -429,13 +429,13 @@ boolean SaveTheGame(FILE *file,int x,int y)
                 actnum=0x8000 | (word)(objptr-objlist);
             else
                 actnum=(word)(uintptr_t)objptr;
-            fwrite(&actnum,sizeof(actnum),1,file);
+            __fwrite(&actnum,sizeof(actnum),1,file);
             checksum = DoChecksum((byte *)&actnum,sizeof(actnum),checksum);
         }
     }
 
-    fwrite (areaconnect,sizeof(areaconnect),1,file);
-    fwrite (areabyplayer,sizeof(areabyplayer),1,file);
+    __fwrite(areaconnect,sizeof(areaconnect),1,file);
+    __fwrite(areabyplayer,sizeof(areabyplayer),1,file);
 
     // player object needs special treatment as it's in WL_AGENT.CPP and not in
     // WL_ACT2.CPP which could cause problems for the relative addressing
@@ -444,7 +444,7 @@ boolean SaveTheGame(FILE *file,int x,int y)
     DiskFlopAnim(x,y);
     memcpy(&nullobj,ob,sizeof(nullobj));
     nullobj.state=(statetype *) ((uintptr_t)nullobj.state-(uintptr_t)&s_player);
-    fwrite(&nullobj,sizeof(nullobj),1,file);
+    __fwrite(&nullobj,sizeof(nullobj),1,file);
     ob = ob->next;
 
     DiskFlopAnim(x,y);
@@ -452,15 +452,15 @@ boolean SaveTheGame(FILE *file,int x,int y)
     {
         memcpy(&nullobj,ob,sizeof(nullobj));
         nullobj.state=(statetype *) ((uintptr_t)nullobj.state-(uintptr_t)&s_grdstand);
-        fwrite(&nullobj,sizeof(nullobj),1,file);
+        __fwrite(&nullobj,sizeof(nullobj),1,file);
     }
     nullobj.active = ac_badobject;          // end of file marker
     DiskFlopAnim(x,y);
-    fwrite(&nullobj,sizeof(nullobj),1,file);
+    __fwrite(&nullobj,sizeof(nullobj),1,file);
 
     DiskFlopAnim(x,y);
     word laststatobjnum=(word) (laststatobj-statobjlist);
-    fwrite(&laststatobjnum,sizeof(laststatobjnum),1,file);
+    __fwrite(&laststatobjnum,sizeof(laststatobjnum),1,file);
     checksum = DoChecksum((byte *)&laststatobjnum,sizeof(laststatobjnum),checksum);
 
     DiskFlopAnim(x,y);
@@ -468,37 +468,37 @@ boolean SaveTheGame(FILE *file,int x,int y)
     {
         memcpy(&nullstat,statobjlist+i,sizeof(nullstat));
         nullstat.visspot=(byte *) ((uintptr_t) nullstat.visspot-(uintptr_t)spotvis);
-        fwrite(&nullstat,sizeof(nullstat),1,file);
+        __fwrite(&nullstat,sizeof(nullstat),1,file);
         checksum = DoChecksum((byte *)&nullstat,sizeof(nullstat),checksum);
     }
 
     DiskFlopAnim(x,y);
-    fwrite (doorposition,sizeof(doorposition),1,file);
+    __fwrite(doorposition,sizeof(doorposition),1,file);
     checksum = DoChecksum((byte *)doorposition,sizeof(doorposition),checksum);
     DiskFlopAnim(x,y);
-    fwrite (doorobjlist,sizeof(doorobjlist),1,file);
+    __fwrite(doorobjlist,sizeof(doorobjlist),1,file);
     checksum = DoChecksum((byte *)doorobjlist,sizeof(doorobjlist),checksum);
 
     DiskFlopAnim(x,y);
-    fwrite (&pwallstate,sizeof(pwallstate),1,file);
+    __fwrite(&pwallstate,sizeof(pwallstate),1,file);
     checksum = DoChecksum((byte *)&pwallstate,sizeof(pwallstate),checksum);
-    fwrite (&pwalltile,sizeof(pwalltile),1,file);
+    __fwrite(&pwalltile,sizeof(pwalltile),1,file);
     checksum = DoChecksum((byte *)&pwalltile,sizeof(pwalltile),checksum);
-    fwrite (&pwallx,sizeof(pwallx),1,file);
+    __fwrite(&pwallx,sizeof(pwallx),1,file);
     checksum = DoChecksum((byte *)&pwallx,sizeof(pwallx),checksum);
-    fwrite (&pwally,sizeof(pwally),1,file);
+    __fwrite(&pwally,sizeof(pwally),1,file);
     checksum = DoChecksum((byte *)&pwally,sizeof(pwally),checksum);
-    fwrite (&pwalldir,sizeof(pwalldir),1,file);
+    __fwrite(&pwalldir,sizeof(pwalldir),1,file);
     checksum = DoChecksum((byte *)&pwalldir,sizeof(pwalldir),checksum);
-    fwrite (&pwallpos,sizeof(pwallpos),1,file);
+    __fwrite(&pwallpos,sizeof(pwallpos),1,file);
     checksum = DoChecksum((byte *)&pwallpos,sizeof(pwallpos),checksum);
 
     //
     // WRITE OUT CHECKSUM
     //
-    fwrite (&checksum,sizeof(checksum),1,file);
+    __fwrite(&checksum,sizeof(checksum),1,file);
 
-    fwrite (&lastgamemusicoffset,sizeof(lastgamemusicoffset),1,file);
+    __fwrite(&lastgamemusicoffset,sizeof(lastgamemusicoffset),1,file);
 
     return(true);
 }
@@ -581,7 +581,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
     DiskFlopAnim(x,y);
     for(i=0;i<MAXSTATS;i++)
     {
-        fread(&nullstat,sizeof(nullstat),1,file);
+        __fread(&nullstat,sizeof(nullstat),1,file);
         checksum = DoChecksum((byte *)&nullstat,sizeof(nullstat),checksum);
         nullstat.visspot=(byte *) ((uintptr_t)nullstat.visspot+(uintptr_t)spotvis);
         memcpy(statobjlist+i,&nullstat,sizeof(nullstat));
@@ -1944,6 +1944,12 @@ void CheckParameters(int argc, char *argv[])
 
 int main (int argc, char *argv[])
 {
+    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Delay(100);
+    spi_lcd_clear();
+
+    SDL_InitSD();
+
 #if defined(_arch_dreamcast)
     DC_Init();
 #else

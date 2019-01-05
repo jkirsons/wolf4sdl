@@ -346,6 +346,7 @@ void IRAM_ATTR displayTask(void *arg) {
         .spics_io_num=PIN_NUM_CS,               //CS pin
         .queue_size=NO_SIM_TRANS,               //We want to be able to queue this many transfers
         .pre_cb=ili_spi_pre_transfer_callback,  //Specify pre-transfer callback to handle D/C line
+        .flags = SPI_DEVICE_NO_DUMMY,
     };
 
 	printf("*** Display task starting.\n");
@@ -354,10 +355,10 @@ void IRAM_ATTR displayTask(void *arg) {
 
     SDL_LockDisplay();
     //Initialize the SPI bus
-    ret=spi_bus_initialize(CONFIG_HW_LCD_MISO_GPIO == 19 ? VSPI_HOST : HSPI_HOST, &buscfg, 2);  // DMA Channel
+    ret=spi_bus_initialize(/*CONFIG_HW_LCD_MISO_GPIO == 19 ? VSPI_HOST :*/ HSPI_HOST, &buscfg, 2);  // DMA Channel
     assert(ret==ESP_OK);
     //Attach the LCD to the SPI bus
-    ret=spi_bus_add_device(CONFIG_HW_LCD_MISO_GPIO == 19 ? VSPI_HOST : HSPI_HOST, &devcfg, &spi);
+    ret=spi_bus_add_device(/*CONFIG_HW_LCD_MISO_GPIO == 19 ? VSPI_HOST :*/ HSPI_HOST, &devcfg, &spi);
     assert(ret==ESP_OK);
     //Initialize the LCD
     ili_init(spi);

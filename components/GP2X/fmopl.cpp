@@ -525,7 +525,7 @@ void Startup940()
 
 	// load code940.bin
 	nLen = 0;
-	fp = fopen("code940.bin", "r");
+	fp = __fopen("code940.bin", "r");
 	if(!fp) {
 		LOG_MSG("no 940 core found\n");
 		return;
@@ -535,13 +535,13 @@ void Startup940()
 	}
 	while(1)
 	{
-		nRead = fread(ucData, 1, 1000, fp);
+		nRead = __fread(ucData, 1, 1000, fp);
 		if(nRead <= 0)
 			break;
 		memcpy(g_pSharedMemory + nLen, ucData, nRead);
 		nLen += nRead;
 	}
-	fclose(fp);
+	__fclose(fp);
 
 	Reset940(0);
 	Pause940(0);
@@ -642,8 +642,8 @@ int YM3812Init(int num, int clock, int rate)
 	for (i = 0;i < *YM3812NumChips; i++)
 	{
 		ptr=(SharedBuff_ptr + BUFPOS_OFFSET+ i*sizeof(int));
-		BufWritePos[i]=(int *) ptr;
-		*BufWritePos[i]=0;
+		Bu__fwrite(Pos[i]=(int *) ptr;
+		*Bu__fwrite(Pos[i]=0;
 
 		ptr=(SharedBuff_ptr + READPOS_OFFSET +i*sizeof(int));
 		BufReadPos[i]=(int *) ptr;
@@ -754,7 +754,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 	}
 
 	bufpos=*BufReadPos[which];
-	d=*BufWritePos[which]- bufpos;
+	d=*Bu__fwrite(Pos[which]- bufpos;
 	nbuff=WRAPPED(d,SHARED_BUF_SIZE);
 	ncopy=MIN(length, nbuff);
 	nfree=SHARED_BUF_SIZE - bufpos;

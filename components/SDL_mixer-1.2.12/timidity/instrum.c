@@ -288,7 +288,7 @@ static InstrumentLayer *load_instrument(const char *name, int font_type, int per
   /* Read some headers and do cursory sanity checks. There are loads
      of magic offsets. This could be rewritten... */
 
-  if ((239 != fread(tmp, 1, 239, fp)) ||
+  if ((239 != __fread(tmp, 1, 239, fp)) ||
       (memcmp(tmp, "GF1PATCH110\0ID#000002", 22) &&
        memcmp(tmp, "GF1PATCH100\0ID#000002", 22))) /* don't know what the
 						      differences are */
@@ -426,13 +426,13 @@ static InstrumentLayer *load_instrument(const char *name, int font_type, int per
       uint8 sf2delay = 0;
 
 #define READ_CHAR(thing) \
-      if (1 != fread(&tmpchar, 1, 1, fp)) goto fail; \
+      if (1 != __fread(&tmpchar, 1, 1, fp)) goto fail; \
       thing = tmpchar;
 #define READ_SHORT(thing) \
-      if (1 != fread(&tmpshort, 2, 1, fp)) goto fail; \
+      if (1 != __fread(&tmpshort, 2, 1, fp)) goto fail; \
       thing = LE_SHORT(tmpshort);
 #define READ_LONG(thing) \
-      if (1 != fread(&tmplong, 4, 1, fp)) goto fail; \
+      if (1 != __fread(&tmplong, 4, 1, fp)) goto fail; \
       thing = LE_LONG(tmplong);
 
 /*
@@ -460,7 +460,7 @@ static InstrumentLayer *load_instrument(const char *name, int font_type, int per
  */
       skip(fp, 7); /* Skip the wave name */
 
-      if (1 != fread(&fractions, 1, 1, fp))
+      if (1 != __fread(&fractions, 1, 1, fp))
 	{
 	fail:
 	  ctl->cmsg(CMSG_ERROR, VERB_NORMAL, "Error reading sample %d", i);
@@ -516,7 +516,7 @@ static InstrumentLayer *load_instrument(const char *name, int font_type, int per
 	}
 
       /* envelope, tremolo, and vibrato */
-      if (18 != fread(tmp, 1, 18, fp)) goto fail; 
+      if (18 != __fread(tmp, 1, 18, fp)) goto fail; 
 
       if (!tmp[13] || !tmp[14])
 	{
@@ -672,7 +672,7 @@ static InstrumentLayer *load_instrument(const char *name, int font_type, int per
       sp->data = safe_malloc(sp->data_length + 1);
       lp->size += sp->data_length + 1;
 
-      if (1 != fread(sp->data, sp->data_length, 1, fp))
+      if (1 != __fread(sp->data, sp->data_length, 1, fp))
 	goto fail;
       
       if (!(sp->modes & MODES_16BIT)) /* convert to 16-bit data */

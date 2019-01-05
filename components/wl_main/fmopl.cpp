@@ -190,17 +190,17 @@ static FILE *sample[1];
 	#if 1	/*save to MONO file */
 		#define SAVE_ALL_CHANNELS \
 		{	signed int pom = acc_calc(lt); \
-			fputc((unsigned short)pom&0xff,sample[0]); \
-			fputc(((unsigned short)pom>>8)&0xff,sample[0]); \
+			__fputc((unsigned short)pom&0xff,sample[0]); \
+			__fputc(((unsigned short)pom>>8)&0xff,sample[0]); \
 		}
 	#else	/*save to STEREO file */
 		#define SAVE_ALL_CHANNELS \
 		{	signed int pom = lt; \
-			fputc((unsigned short)pom&0xff,sample[0]); \
-			fputc(((unsigned short)pom>>8)&0xff,sample[0]); \
+			__fputc((unsigned short)pom&0xff,sample[0]); \
+			__fputc(((unsigned short)pom>>8)&0xff,sample[0]); \
 			pom = rt; \
-			fputc((unsigned short)pom&0xff,sample[0]); \
-			fputc(((unsigned short)pom>>8)&0xff,sample[0]); \
+			__fputc((unsigned short)pom&0xff,sample[0]); \
+			__fputc(((unsigned short)pom>>8)&0xff,sample[0]); \
 		}
 	#endif
 #endif
@@ -1267,7 +1267,7 @@ static int init_tables(void)
 
 
 #ifdef SAVE_SAMPLE
-	sample[0]=fopen("sampsum.pcm","wb");
+	sample[0]=__fopen("sampsum.pcm","wb");
 #endif
 
 	return 1;
@@ -1276,7 +1276,7 @@ static int init_tables(void)
 static void OPLCloseTable( void )
 {
 #ifdef SAVE_SAMPLE
-	fclose(sample[0]);
+	__fclose(sample[0]);
 #endif
 }
 
@@ -1484,8 +1484,8 @@ static void OPLWriteReg(FM_OPL *OPL, int r, int v)
 #ifdef LOG_CYM_FILE
 	if ((cymfile) && (r!=0) )
 	{
-		fputc( (unsigned char)r, cymfile );
-		fputc( (unsigned char)v, cymfile );
+		__fputc( (unsigned char)r, cymfile );
+		__fputc( (unsigned char)v, cymfile );
 	}
 #endif
 
@@ -1787,7 +1787,7 @@ static void cymfile_callback (int n)
 {
 	if (cymfile)
 	{
-		fputc( (unsigned char)0, cymfile );
+		__fputc( (unsigned char)0, cymfile );
 	}
 }
 #endif
@@ -1809,7 +1809,7 @@ static int OPL_LockTable(void)
 	}
 
 #ifdef LOG_CYM_FILE
-	cymfile = fopen("3812_.cym","wb");
+	cymfile = __fopen("3812_.cym","wb");
 	if (cymfile)
 		timer_pulse ( TIME_IN_HZ(110), 0, cymfile_callback); /*110 Hz pulse timer*/
 	else
@@ -1830,7 +1830,7 @@ static void OPL_UnLockTable(void)
 	OPLCloseTable();
 
 #ifdef LOG_CYM_FILE
-	fclose (cymfile);
+	__fclose(cymfile);
 	cymfile = NULL;
 #endif
 

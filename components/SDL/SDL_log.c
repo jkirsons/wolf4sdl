@@ -417,9 +417,9 @@ SDL_LogOutput(void *userdata, int category, SDL_LogPriority priority,
 #elif defined(__PSP__)
     {
         FILE*        pFile;
-        pFile = fopen ("SDL_Log.txt", "a");
+        pFile =__fopen("SDL_Log.txt", "a");
         fprintf(pFile, "%s: %s\n", SDL_priority_prefixes[priority], message);
-        fclose (pFile);
+        __fclose(pFile);
     }
 #endif
 #ifdef HAVE_STDIO_H

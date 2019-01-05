@@ -36,10 +36,10 @@ static int freq;
 
 int fluidsynth_check_soundfont(const char *path, void *data)
 {
-	FILE *file = fopen(path, "r");
+	FILE *file = __fopen(path, "r");
 
 	if (file) {
-		fclose(file);
+		__fclose(file);
 		return 1;
 	} else {
 		Mix_SetError("Failed to access the SoundFont %s", path);

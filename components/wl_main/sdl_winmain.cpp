@@ -142,18 +142,18 @@ static void cleanup_output(void)
 #endif
 
 	/* Flush the output in case anything is queued */
-	fclose(stdout);
-	fclose(stderr);
+	__fclose(stdout);
+	__fclose(stderr);
 
 #if 1
 #ifndef NO_STDIO_REDIRECT
 	/* See if the files have any output in them */
 	if ( stdoutPath[0] ) {
-		file = fopen(stdoutPath, TEXT("r"));
+		file = __fopen(stdoutPath, TEXT("r"));
 		if ( file ) {
             char buf[16384];
-            size_t readbytes = fread(buf, 1, 16383, file);
-            fclose(file);
+            size_t readbytes = __fread(buf, 1, 16383, file);
+            __fclose(file);
 
             if(readbytes != 0)
             {
@@ -165,11 +165,11 @@ static void cleanup_output(void)
 		}
 	}
 	if ( stderrPath[0] ) {
-		file = fopen(stderrPath, TEXT("rb"));
+		file = __fopen(stderrPath, TEXT("rb"));
 		if ( file ) {
             char buf[16384];
-            size_t readbytes = fread(buf, 1, 16383, file);
-            fclose(file);
+            size_t readbytes = __fread(buf, 1, 16383, file);
+            __fclose(file);
 
             if(readbytes != 0)
             {
@@ -300,9 +300,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 #ifndef _WIN32_WCE
 	if ( newfp == NULL ) {	/* This happens on NT */
 #if !defined(stdout)
-		stdout = fopen(stdoutPath, TEXT("w"));
+		stdout = __fopen(stdoutPath, TEXT("w"));
 #else
-		newfp = fopen(stdoutPath, TEXT("w"));
+		newfp = __fopen(stdoutPath, TEXT("w"));
 		if ( newfp ) {
 			*stdout = *newfp;
 		}
@@ -322,9 +322,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrev, LPSTR szCmdLine, int sw)
 #ifndef _WIN32_WCE
 	if ( newfp == NULL ) {	/* This happens on NT */
 #if !defined(stderr)
-		stderr = fopen(stderrPath, TEXT("w"));
+		stderr = __fopen(stderrPath, TEXT("w"));
 #else
-		newfp = fopen(stderrPath, TEXT("w"));
+		newfp = __fopen(stderrPath, TEXT("w"));
 		if ( newfp ) {
 			*stderr = *newfp;
 		}

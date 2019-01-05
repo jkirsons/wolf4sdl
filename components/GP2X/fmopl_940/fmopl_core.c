@@ -1354,7 +1354,7 @@ int YM3812Init(int num, int clock, int rate)
 	for (i = 0;i < *YM3812NumChips; i++)
 	{
 		ptr=(SharedBuff_ptr + BUFPOS_OFFSET + i*sizeof(int));
-		BufWritePos[i]=(int *) ptr;
+		Bu__fwrite(Pos[i]=(int *) ptr;
 
 		ptr=(SharedBuff_ptr + READPOS_OFFSET + i*sizeof(int));
 		BufReadPos[i]=(int *) ptr;
@@ -1473,16 +1473,16 @@ static void YM3812UpdateOne(int which, int length)
 	int i,nfree;
 	if(length==0) return;
 	YM3812UpdateOne_core(which,buff,length);
-	nfree=SHARED_BUF_SIZE - *BufWritePos[which];
+	nfree=SHARED_BUF_SIZE - *Bu__fwrite(Pos[which];
 	if(length < nfree)
 	{
-		for(i=0;i<length;i++) SharedBuffer[which][(*BufWritePos[which])+i]=buff[i];
-		(*BufWritePos[which])+=length;
+		for(i=0;i<length;i++) SharedBuffer[which][(*Bu__fwrite(Pos[which])+i]=buff[i];
+		(*Bu__fwrite(Pos[which])+=length;
 	} else
 	{
-		for(i=0;i<nfree;i++) SharedBuffer[which][(*BufWritePos[which])+i]=buff[i];
+		for(i=0;i<nfree;i++) SharedBuffer[which][(*Bu__fwrite(Pos[which])+i]=buff[i];
 		for(i=0;i<length-nfree;i++) SharedBuffer[which][i]=buff[i+nfree];
-		*BufWritePos[which]=length-nfree;
+		*Bu__fwrite(Pos[which]=length-nfree;
 	}
 }
 

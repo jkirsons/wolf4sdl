@@ -10,6 +10,9 @@
 #include "driver/sdmmc_host.h"
 #include "driver/sdspi_host.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 typedef struct {
     Uint8 major;
     Uint8 minor;
@@ -50,5 +53,18 @@ int SDL_UnlockMutex(SDL_mutex* mutex);
 
 #define MODE_SPI 1
 void SDL_InitSD(void);
+
+// File operations - safely lock/unlock display during operations...
+int __mkdir(const char *path, mode_t mode);
+FILE *__fopen( const char *path, const char *mode );
+long __ftell( FILE *f );
+int __feof ( FILE * stream );
+int __fputc ( int character, FILE * stream );
+int __fgetc ( FILE * stream );
+size_t __fwrite ( const void * ptr, size_t size, size_t count, FILE * stream );
+int __fclose ( FILE * stream );
+int __fseek( FILE * stream, long int offset, int origin );
+size_t __fread( void *buffer, size_t size, size_t num, FILE *stream );
+int __stat(const char *path, struct stat *buf);
 
 #endif

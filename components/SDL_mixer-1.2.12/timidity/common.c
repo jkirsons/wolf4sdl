@@ -29,7 +29,7 @@ static FILE *try_to_open(const char *name, int decompress, int noise_mode)
 {
   FILE *fp;
 
-  fp=fopen(name, OPEN_MODE); /* First just check that the file exists */
+  fp=__fopen(name, OPEN_MODE); /* First just check that the file exists */
 
   if (!fp)
     return 0;
@@ -50,7 +50,7 @@ static FILE *try_to_open(const char *name, int decompress, int noise_mode)
 	    continue;
 
 	  /* Yes. Close the file, open a pipe instead. */
-	  fclose(fp);
+	  __fclose(fp);
 
 	  /* Quote some special characters in the file name */
 	  cp=name;
@@ -174,7 +174,7 @@ void close_file(FILE *fp)
 #ifdef DECOMPRESSOR_LIST
   if (pclose(fp)) /* Any better ideas? */
 #endif
-    fclose(fp);
+    __fclose(fp);
 
   strncpy(current_filename, "MIDI file", PATH_MAX - 1);
 }

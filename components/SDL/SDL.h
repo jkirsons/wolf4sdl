@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#include "SDL_system.h"
+
 #include "SDL_input.h"
 #include "SDL_stdinc.h"
 #include "SDL_endian.h"
@@ -11,7 +13,7 @@
 
 #include "SDL_video.h"
 #include "SDL_event.h"
-#include "SDL_system.h"
+
 #include "SDL_scancode.h"
 #include "SDL_blit.h"
 #include "SDL_event.h"

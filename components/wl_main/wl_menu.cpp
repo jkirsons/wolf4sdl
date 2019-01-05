@@ -1516,12 +1516,12 @@ CP_LoadGame (int quick)
             else
                 strcpy(loadpath, name);
 
-            file = fopen (loadpath, "rb");
-            fseek (file, 32, SEEK_SET);
+            file = __fopen(loadpath, "rb");
+            __fseek(file, 32, SEEK_SET);
             loadedgame = true;
             LoadTheGame (file, 0, 0);
             loadedgame = false;
-            fclose (file);
+            __fclose(file);
 
             DrawFace ();
             DrawHealth ();
@@ -1561,14 +1561,14 @@ CP_LoadGame (int quick)
             else
                 strcpy(loadpath, name);
 
-            file = fopen (loadpath, "rb");
-            fseek (file, 32, SEEK_SET);
+            file =__fopen(loadpath, "rb");
+            __fseek(file, 32, SEEK_SET);
 
             DrawLSAction (0);
             loadedgame = true;
 
             LoadTheGame (file, LSA_X + 8, LSA_Y + 5);
-            fclose (file);
+            __fclose(file);
 
             StartGame = 1;
             ShootSnd ();
@@ -1706,14 +1706,14 @@ CP_SaveGame (int quick)
                 strcpy(savepath, name);
 
             unlink (savepath);
-            file = fopen (savepath, "wb");
+            file =__fopen(savepath, "wb");
 
             strcpy (input, &SaveGameNames[which][0]);
 
-            fwrite (input, 1, 32, file);
-            fseek (file, 32, SEEK_SET);
+            __fwrite(input, 1, 32, file);
+            __fseek(file, 32, SEEK_SET);
             SaveTheGame (file, 0, 0);
-            fclose (file);
+            __fclose(file);
 
 #ifdef _arch_dreamcast
             DC_SaveToVMU(name, input);
@@ -1782,14 +1782,14 @@ CP_SaveGame (int quick)
                     strcpy(savepath, name);
 
                 unlink (savepath);
-                file = fopen (savepath, "wb");
-                fwrite (input, 32, 1, file);
-                fseek (file, 32, SEEK_SET);
+                file =__fopen(savepath, "wb");
+                __fwrite(input, 32, 1, file);
+                __fseek(file, 32, SEEK_SET);
 
                 DrawLSAction (1);
                 SaveTheGame (file, LSA_X + 8, LSA_Y + 5);
 
-                fclose (file);
+                __fclose(file);
 
 #ifdef _arch_dreamcast
                 DC_SaveToVMU(name, input);
@@ -4011,12 +4011,12 @@ CheckForEpisodes (void)
     if(configdir[0] != 0)
     {
         // Ensure config directory exists and create if necessary
-        if(stat(configdir, &statbuf) != 0)
+        if(__stat(configdir, &statbuf) != 0)
         {
 #ifdef _WIN32
             if(_mkdir(configdir) != 0)
 #else
-            if(mkdir(configdir, 0755) != 0)
+            if(__mkdir(configdir, 0755) != 0)
 #endif
             {
                 Quit("The configuration directory \"%s\" could not be created.", configdir);
@@ -4029,12 +4029,12 @@ CheckForEpisodes (void)
 //
 #ifdef JAPAN
 #ifdef JAPDEMO
-    if(!stat(DATADIR "vswap.wj1", &statbuf))
+    if(!__stat(DATADIR "vswap.wj1", &statbuf))
     {
         strcpy (extension, "wj1");
         numEpisodesMissing = 5;
 #else
-    if(!stat(DATADIR "vswap.wj6", &statbuf))
+    if(!__stat(DATADIR "vswap.wj6", &statbuf))
     {
         strcpy (extension, "wj6");
 #endif
@@ -4052,7 +4052,7 @@ CheckForEpisodes (void)
 // ENGLISH
 //
 #ifdef UPLOAD
-    if(!stat(DATADIR "vswap.wl1", &statbuf))
+    if(!__stat(DATADIR "vswap.wl1", &statbuf))
     {
         strcpy (extension, "wl1");
         numEpisodesMissing = 5;
@@ -4061,7 +4061,7 @@ CheckForEpisodes (void)
         Quit ("NO WOLFENSTEIN 3-D DATA FILES to be found!");
 #else
 #ifndef SPEAR
-    if(!stat(DATADIR "vswap.wl6", &statbuf))
+    if(!__stat(DATADIR "vswap.wl6", &statbuf))
     {
         strcpy (extension, "wl6");
         NewEmenu[2].active =
@@ -4074,7 +4074,7 @@ CheckForEpisodes (void)
     }
     else
     {
-        if(!stat(DATADIR "vswap.wl3", &statbuf))
+        if(!__stat(DATADIR "vswap.wl3", &statbuf))
         {
             strcpy (extension, "wl3");
             numEpisodesMissing = 3;
@@ -4082,7 +4082,7 @@ CheckForEpisodes (void)
         }
         else
         {
-            if(!stat(DATADIR "vswap.wl1", &statbuf))
+            if(!__stat(DATADIR "vswap.wl1", &statbuf))
             {
                 strcpy (extension, "wl1");
                 numEpisodesMissing = 5;
@@ -4099,28 +4099,28 @@ CheckForEpisodes (void)
 #ifndef SPEARDEMO
     if(param_mission == 0)
     {
-        if(!stat(DATADIR "vswap.sod", &statbuf))
+        if(!__stat(DATADIR "vswap.sod", &statbuf))
             strcpy (extension, "sod");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 1)
     {
-        if(!stat(DATADIR "vswap.sd1", &statbuf))
+        if(!__stat(DATADIR "vswap.sd1", &statbuf))
             strcpy (extension, "sd1");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 2)
     {
-        if(!stat(DATADIR "vswap.sd2", &statbuf))
+        if(!__stat(DATADIR "vswap.sd2", &statbuf))
             strcpy (extension, "sd2");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
     else if(param_mission == 3)
     {
-        if(!stat(DATADIR "vswap.sd3", &statbuf))
+        if(!__stat(DATADIR "vswap.sd3", &statbuf))
             strcpy (extension, "sd3");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
@@ -4130,7 +4130,7 @@ CheckForEpisodes (void)
     strcpy (graphext, "sod");
     strcpy (audioext, "sod");
 #else
-    if(!stat(DATADIR "vswap.sdm", &statbuf))
+    if(!__stat(DATADIR "vswap.sdm", &statbuf))
     {
         strcpy (extension, "sdm");
     }

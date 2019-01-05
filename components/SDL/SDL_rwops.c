@@ -27,7 +27,7 @@
 
 #include "SDL_endian.h"
 #include "SDL_rwops.h"
-
+#include "SDL_system.h"
 
 #if defined(__WIN32__) && !defined(__SYMBIAN32__)
 
@@ -216,7 +216,7 @@ static int SDLCALL win32_file_seek(SDL_RWops *context, int offset, int whence)
 	if ( file_pos != INVALID_SET_FILE_POINTER )
 		return file_pos; /* success */
 	
-	SDL_Error(SDL_EFSEEK);
+	SDL_Error(SDL_E__fseek();
 	return -1; /* error */
 }
 static int SDLCALL win32_file_read(SDL_RWops *context, void *ptr, int size, int maxnum)
@@ -285,13 +285,13 @@ static int SDLCALL win32_file_write(SDL_RWops *context, const void *ptr, int siz
 	/* if in append mode, we must go to the EOF before write */
 	if (context->hidden.win32io.append) {
 		if ( SetFilePointer(context->hidden.win32io.h,0L,NULL,FILE_END) == INVALID_SET_FILE_POINTER ) {
-			SDL_Error(SDL_EFWRITE);
+			SDL_Error(SDL_E__fwrite();
 			return 0;
 		}
 	}
 	
 	if (!WriteFile(context->hidden.win32io.h,ptr,total_bytes,&byte_written,NULL)) {
-		SDL_Error(SDL_EFWRITE);
+		SDL_Error(SDL_E__fwrite();
 		return 0;
 	}
 	
@@ -322,8 +322,8 @@ static int SDLCALL win32_file_close(SDL_RWops *context)
 
 static int SDLCALL stdio_seek(SDL_RWops *context, int offset, int whence)
 {
-	if ( fseek(context->hidden.stdio.fp, offset, whence) == 0 ) {
-		return(ftell(context->hidden.stdio.fp));
+	if ( __fseek(context->hidden.stdio.fp, offset, whence) == 0 ) {
+		return(__ftell(context->hidden.stdio.fp));
 	} else {
 		SDL_Error(SDL_EFSEEK);
 		return(-1);
@@ -333,7 +333,7 @@ static int SDLCALL stdio_read(SDL_RWops *context, void *ptr, int size, int maxnu
 {
 	size_t nread;
 
-	nread = fread(ptr, size, maxnum, context->hidden.stdio.fp); 
+	nread = __fread(ptr, size, maxnum, context->hidden.stdio.fp); 
 	if ( nread == 0 && ferror(context->hidden.stdio.fp) ) {
 		SDL_Error(SDL_EFREAD);
 	}
@@ -343,7 +343,7 @@ static int SDLCALL stdio_write(SDL_RWops *context, const void *ptr, int size, in
 {
 	size_t nwrote;
 
-	nwrote = fwrite(ptr, size, num, context->hidden.stdio.fp);
+	nwrote = __fwrite(ptr, size, num, context->hidden.stdio.fp);
 	if ( nwrote == 0 && ferror(context->hidden.stdio.fp) ) {
 		SDL_Error(SDL_EFWRITE);
 	}
@@ -354,7 +354,7 @@ static int SDLCALL stdio_close(SDL_RWops *context)
 	if ( context ) {
 		if ( context->hidden.stdio.autoclose ) {
 			/* WARNING:  Check the return value here! */
-			fclose(context->hidden.stdio.fp);
+			__fclose(context->hidden.stdio.fp);
 		}
 		SDL_FreeRW(context);
 	}
@@ -510,11 +510,11 @@ SDL_RWops *SDL_RWFromFile(const char *file, const char *mode)
 #ifdef __MACOS__
 	{
 		char *mpath = unix_to_mac(file);
-		fp = fopen(mpath, mode);
+		fp = __fopen(mpath, mode);
 		SDL_free(mpath);
 	}
 #else
-	fp = fopen(file, mode);
+	fp = __fopen(file, mode);
 #endif
 	if ( fp == NULL ) {
 		SDL_SetError("Couldn't open %s", file);

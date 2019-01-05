@@ -1,4 +1,4 @@
-menu "ESP32-WOLF3D platform-specific configuration"
+menu "ESP32-DUKE3D platform-specific configuration"
 
 choice DUKE3D_HARDWARE
 	prompt "Hardware to run on"

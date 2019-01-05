@@ -1,4 +1,6 @@
 #include "SDL_system.h"
+#include <sys/types.h>
+#include <sys/stat.h>
 
 struct SDL_mutex
 {
@@ -40,7 +42,7 @@ void SDL_InitSD(void)
     host.command_timeout_ms = 3000;
     host.max_freq_khz = SDMMC_FREQ_DEFAULT;
     // https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/peripherals/spi_master.html
-    host.slot = CONFIG_HW_SD_PIN_NUM_MISO == 19 ? VSPI_HOST : HSPI_HOST;
+    host.slot = /*CONFIG_HW_SD_PIN_NUM_MISO == 19 ? VSPI_HOST :*/ HSPI_HOST;
     sdspi_slot_config_t slot_config = SDSPI_SLOT_CONFIG_DEFAULT();
     slot_config.gpio_miso = CONFIG_HW_SD_PIN_NUM_MISO;
     slot_config.gpio_mosi = CONFIG_HW_SD_PIN_NUM_MOSI;
@@ -110,4 +112,92 @@ int SDL_LockMutex(SDL_mutex* mutex)
 int SDL_UnlockMutex(SDL_mutex* mutex)
 {
     return 0;
+}
+
+int __mkdir(const char *path, mode_t mode)
+{
+	SDL_LockDisplay(); 
+    int out = mkdir(path, mode);   
+    SDL_UnlockDisplay();
+    return out;
+}
+
+FILE *__fopen( const char *path, const char *mode )
+{
+	SDL_LockDisplay();
+	FILE *f = fopen(path, mode);
+	SDL_UnlockDisplay();
+	return f;
+}
+
+long __ftell( FILE *f )
+{
+	SDL_LockDisplay();
+	long size = ftell(f);
+	SDL_UnlockDisplay();
+	return size;
+}
+
+int __feof ( FILE * stream )
+{
+	SDL_LockDisplay();
+	int ret = feof ( stream );
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+int __fputc ( int character, FILE * stream )
+{
+	SDL_LockDisplay();
+	int ret = fputc ( character, stream );
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+int __fgetc ( FILE * stream )
+{
+	SDL_LockDisplay();
+	int ret = fgetc ( stream );
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+size_t __fwrite ( const void * ptr, size_t size, size_t count, FILE * stream )
+{
+	SDL_LockDisplay();
+	size_t ret = fwrite ( ptr, size, count, stream );
+	SDL_UnlockDisplay();
+	return ret;		
+}
+
+int __fclose ( FILE * stream )
+{
+	SDL_LockDisplay();
+	int ret = fclose ( stream );
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+int __fseek( FILE * stream, long int offset, int origin )
+{
+	SDL_LockDisplay();
+	int ret = fseek ( stream, offset, origin );
+	SDL_UnlockDisplay();
+	return ret;
+}
+
+size_t __fread( void *buffer, size_t size, size_t num, FILE *stream )
+{
+	SDL_LockDisplay();
+	size_t num_read = fread(buffer, size, num, stream);
+	SDL_UnlockDisplay();
+	return num_read;
+}
+
+int __stat(const char *path, struct stat *buf)
+{
+	SDL_LockDisplay();
+	int ret = stat ( path, buf );
+	SDL_UnlockDisplay();
+	return ret;	
 }

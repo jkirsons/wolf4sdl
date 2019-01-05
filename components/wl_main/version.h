@@ -4,14 +4,14 @@
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 
 #ifndef DATADIR
-#define DATADIR "/usr/share/games/wolf3d/"
+#define DATADIR "/sd/data/Wolfenstein 3D/base/"
 #endif
 
 /* Defines used for different versions */
 
 //#define SPEAR
 //#define SPEARDEMO
-#define UPLOAD
+//#define UPLOAD
 #define GOODTIMES
 #define CARMACIZED
 //#define APOGEE_1_0
