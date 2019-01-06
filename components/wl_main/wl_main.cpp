@@ -97,8 +97,8 @@ int     param_samplerate = 11025;       // higher samplerates result in "out of 
 int     param_audiobuffer = 128;
 #elif defined(PLATFORM_ESP32)
 int     param_joystickhat = -1;
-int     param_samplerate = 11025;       // higher samplerates result in "out of memory"
-int     param_audiobuffer = 1024;
+int     param_samplerate = 7042;       // higher samplerates result in "out of memory"
+int     param_audiobuffer = 512;
 #else
 int     param_joystickhat = -1;
 int     param_samplerate = 44100;

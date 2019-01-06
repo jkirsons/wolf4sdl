@@ -31,6 +31,11 @@ unsigned screenBits = 8;
 #else
 unsigned screenBits = 16;
 #endif
+#elif defined(PLATFORM_ESP32)
+boolean usedoublebuffering = true;
+unsigned screenWidth = 320;
+unsigned screenHeight = 200;
+unsigned screenBits = 8;
 #else
 boolean usedoublebuffering = true;
 unsigned screenWidth = 640;

@@ -554,7 +554,7 @@ void SD_PrepareSound(int which)
  
     int destsamples = (int) ((float) size * (float) param_samplerate
         / (float) ORIGSAMPLERATE);
-printf("destsamples: %d\n", sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2);
+//printf("destsamples: %d\n", sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2);
     byte *wavebuffer = (byte *) malloc(sizeof(headchunk) + sizeof(wavechunk)
         + destsamples * 2);     // dest are 16-bit samples
     if(wavebuffer == NULL)

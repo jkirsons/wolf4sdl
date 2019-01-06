@@ -40,7 +40,7 @@
 #endif
 
 /* The general purpose software blit routine */
-static int SDL_SoftBlit(SDL_Surface *src, SDL_Rect *srcrect,
+int SDL_SoftBlit(SDL_Surface *src, SDL_Rect *srcrect,
 			SDL_Surface *dst, SDL_Rect *dstrect)
 {
 	int okay;
@@ -152,7 +152,7 @@ static __inline__ void SDL_memcpySSE(Uint8 *to, const Uint8 *from, int len)
 #endif
 #endif
 
-static void SDL_BlitCopy(SDL_BlitInfo *info)
+/*static*/ void SDL_BlitCopy(SDL_BlitInfo *info)
 {
 	Uint8 *src, *dst;
 	int w, h;

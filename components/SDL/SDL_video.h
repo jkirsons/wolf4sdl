@@ -74,7 +74,6 @@ typedef struct SDL_Surface {
 	/* This structure also contains private fields not shown here */
 } SDL_Surface;
 
-
 /* These are the currently supported flags for the SDL_surface */
 /* Available for SDL_CreateRGBSurface() or SDL_SetVideoMode() */
 #define SDL_SWSURFACE	0x00000000	/* Surface is in system memory */

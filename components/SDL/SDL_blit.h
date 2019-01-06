@@ -51,6 +51,11 @@ struct private_swaccel {
 	void *aux_data;
 };
 
+typedef struct {
+	SDL_loblit blit;
+	void *aux_data;
+} pub_swaccel;
+
 /* Blit mapping definition */
 typedef struct SDL_BlitMap {
 	SDL_Surface *dst;
@@ -66,6 +71,9 @@ typedef struct SDL_BlitMap {
         unsigned int format_version;
 } SDL_BlitMap;
 
+int SDL_SoftBlit(SDL_Surface *src, SDL_Rect *srcrect,
+			SDL_Surface *dst, SDL_Rect *dstrect);
+void SDL_BlitCopy(SDL_BlitInfo *info);
 
 /* Functions found in SDL_blit.c */
 extern int SDL_CalculateBlit(SDL_Surface *surface);
