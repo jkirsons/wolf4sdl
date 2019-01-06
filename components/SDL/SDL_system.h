@@ -54,6 +54,8 @@ int SDL_UnlockMutex(SDL_mutex* mutex);
 #define MODE_SPI 1
 void SDL_InitSD(void);
 
+void Check(const char *str);
+
 // File operations - safely lock/unlock display during operations...
 int __mkdir(const char *path, mode_t mode);
 FILE *__fopen( const char *path, const char *mode );

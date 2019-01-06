@@ -41,9 +41,9 @@
 
 typedef struct
 {
-	char RIFF[4];
+	char RIFFx[4];
 	longword filelenminus8;
-	char WAVE[4];
+	char WAVEx[4];
 	char fmt_[4];
 	longword formatlen;
 	word val0x0001;
@@ -550,19 +550,21 @@ void SD_PrepareSound(int which)
     byte *origsamples = PM_GetSound(page);
     if(origsamples + size >= PM_GetEnd())
         Quit("SD_PrepareSound(%i): Sound reaches out of page file!\n", which);
-
+//heap_caps_print_heap_info(MALLOC_CAP_SPIRAM);
+ 
     int destsamples = (int) ((float) size * (float) param_samplerate
         / (float) ORIGSAMPLERATE);
-
+printf("destsamples: %d\n", sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2);
     byte *wavebuffer = (byte *) malloc(sizeof(headchunk) + sizeof(wavechunk)
         + destsamples * 2);     // dest are 16-bit samples
     if(wavebuffer == NULL)
         Quit("Unable to allocate wave buffer for sound %i!\n", which);
-
+ 
     headchunk head = {{'R','I','F','F'}, 0, {'W','A','V','E'},
         {'f','m','t',' '}, 0x10, 0x0001, 1, param_samplerate, param_samplerate*2, 2, 16};
     wavechunk dhead = {{'d', 'a', 't', 'a'}, destsamples*2};
     head.filelenminus8 = sizeof(head) + destsamples*2;  // (sizeof(dhead)-8 = 0)
+
     memcpy(wavebuffer, &head, sizeof(head));
     memcpy(wavebuffer+sizeof(head), &dhead, sizeof(dhead));
 
@@ -572,6 +574,7 @@ void SD_PrepareSound(int which)
         + sizeof(wavechunk));
     float cursample = 0.F;
     float samplestep = (float) ORIGSAMPLERATE / (float) param_samplerate;
+    
     for(int i=0; i<destsamples; i++, cursample+=samplestep)
     {
         newsamples[i] = GetSample((float)size * (float)i / (float)destsamples,
@@ -579,8 +582,13 @@ void SD_PrepareSound(int which)
     }
     SoundBuffers[which] = wavebuffer;
 
+
+
     SoundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
+heap_caps_check_integrity_all(true);  
+SDL_Delay(1000);       
+printf("done\n");
 }
 
 int SD_PlayDigitized(word which,int leftpos,int rightpos)

@@ -549,7 +549,7 @@ SDL_RWops *SDL_RWFromFP(FILE *fp, int autoclose)
 SDL_RWops *SDL_RWFromMem(void *mem, int size)
 {
 	SDL_RWops *rwops;
-
+printf("SDL_AllocRW\n"); 
 	rwops = SDL_AllocRW();
 	if ( rwops != NULL ) {
 		rwops->seek = mem_seek;

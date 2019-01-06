@@ -10,6 +10,7 @@
 #include "SDL_stdinc.h"
 #include "SDL_endian.h"
 #include "SDL_audio.h"
+#include "SDL_wave.h"
 
 #include "SDL_video.h"
 #include "SDL_event.h"
@@ -20,6 +21,8 @@
 
 typedef int SDLMod;
 //typedef int SDL_Joystick;
+
+#define PLATFORM_ESP32 1
 
 #define SDLK_FIRST 0
 #define SDLK_LAST 1024

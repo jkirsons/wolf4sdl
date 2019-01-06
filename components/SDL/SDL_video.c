@@ -24,6 +24,36 @@ void SDL_UpdateRect(SDL_Surface *screen, Sint32 x, Sint32 y, Sint32 w, Sint32 h)
 SDL_VideoInfo *SDL_GetVideoInfo(void)
 {
     SDL_VideoInfo *info = malloc(sizeof(SDL_VideoInfo));
+    info->hw_available = 0;
+    info->wm_available = 0;
+    info->video_mem = 1024*4;
+    info->blit_hw = 0;
+    info->blit_hw_CC = 0;
+    info->blit_hw_A = 0;
+    info->blit_sw = 0;
+    info->blit_sw_CC = 0;
+    info->blit_sw_A = 0;
+    info->vfmt = NULL;
+    info->vfmt = malloc(sizeof(SDL_PixelFormat));
+
+    info->vfmt->palette = NULL;
+    info->vfmt->BitsPerPixel = 8;
+    info->vfmt->BytesPerPixel = 1;
+    info->vfmt->Rloss = 0;
+    info->vfmt->Gloss = 0;
+    info->vfmt->Bloss = 0;
+    info->vfmt->Aloss = 0;
+    info->vfmt->Rshift = 0;
+    info->vfmt->Gshift = 0;
+    info->vfmt->Bshift = 0;
+    info->vfmt->Ashift = 0;
+    info->vfmt->Rmask = 0;
+    info->vfmt->Gmask = 0;
+    info->vfmt->Bmask = 0;
+    info->vfmt->Amask = 0;
+    info->vfmt->colorkey = 0;
+    info->vfmt->alpha = 0;
+
     return info;
 }
 
@@ -41,7 +71,7 @@ SDL_Rect **SDL_ListModes(SDL_PixelFormat *format, Uint32 flags)
 
 void SDL_WM_SetCaption(const char *title, const char *icon)
 {
-
+    printf("Title: %s\n", title);
 }
 
 char *SDL_GetKeyName(SDLKey key)

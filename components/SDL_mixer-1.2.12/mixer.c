@@ -28,6 +28,7 @@
 #include "SDL_mutex.h"
 #include "SDL_endian.h"
 #include "SDL_timer.h"
+#include "SDL_system.h"
 
 #include "SDL_mixer.h"
 #include "load_aiff.h"
@@ -566,7 +567,7 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 		}
 		return(NULL);
 	}
-
+Check("1");  
 	/* Allocate the chunk memory */
 	chunk = (Mix_Chunk *)SDL_malloc(sizeof(Mix_Chunk));
 	if ( chunk == NULL ) {
@@ -577,11 +578,13 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 		return(NULL);
 	}
 
+Check("2");  
 	/* Find out what kind of audio file this is */
 	magic = SDL_ReadLE32(src);
 	/* Seek backwards for compatibility with older loaders */
+Check("3");  	
 	SDL_RWseek(src, -(int)sizeof(Uint32), RW_SEEK_CUR);
-
+Check("4");  
 	switch (magic) {
 		case WAVE:
 		case RIFF:
@@ -612,6 +615,7 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 			SDL_SetError("Unrecognized sound file type");
 			return(0);			
 	}
+
 	if ( !loaded ) {
 		SDL_free(chunk);
 		if ( freesrc ) {
@@ -624,11 +628,11 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 	PrintFormat("Audio device", &mixer);
 	PrintFormat("-- Wave file", &wavespec);
 #endif
-
+Check("5");  
 	/* Build the audio converter and create conversion buffers */
 	if ( wavespec.format != mixer.format ||
 		 wavespec.channels != mixer.channels ||
-		 wavespec.freq != mixer.freq ) {
+		 wavespec.freq != mixer.freq ) {  			 
 		if ( SDL_BuildAudioCVT(&wavecvt,
 				wavespec.format, wavespec.channels, wavespec.freq,
 				mixer.format, mixer.channels, mixer.freq) < 0 ) {
@@ -637,31 +641,32 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 			return(NULL);
 		}
 		samplesize = ((wavespec.format & 0xFF)/8)*wavespec.channels;
-		wavecvt.len = chunk->alen & ~(samplesize-1);
+		wavecvt.len = chunk->alen & ~(samplesize-1);  		
+Check("6");  		
 		wavecvt.buf = (Uint8 *)SDL_calloc(1, wavecvt.len*wavecvt.len_mult);
-		if ( wavecvt.buf == NULL ) {
+		if ( wavecvt.buf == NULL ) {		
 			SDL_SetError("Out of memory");
 			SDL_free(chunk->abuf);
 			SDL_free(chunk);
 			return(NULL);
 		}
+Check("7");  		
 		memcpy(wavecvt.buf, chunk->abuf, chunk->alen);
 		SDL_free(chunk->abuf);
-
+Check("7.5");  		
 		/* Run the audio converter */
-		if ( SDL_ConvertAudio(&wavecvt) < 0 ) {
+		if ( SDL_ConvertAudio(&wavecvt) < 0 ) {	
 			SDL_free(wavecvt.buf);
 			SDL_free(chunk);
 			return(NULL);
-		}
-
+		}  
 		chunk->abuf = wavecvt.buf;
 		chunk->alen = wavecvt.len_cvt;
 	}
 
 	chunk->allocated = 1;
 	chunk->volume = MIX_MAX_VOLUME;
-
+Check("8");  
 	return(chunk);
 }
 

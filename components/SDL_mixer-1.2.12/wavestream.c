@@ -55,7 +55,7 @@
 #define ADPCM_CODE	2
 #define WAVE_MONO	1
 #define WAVE_STEREO	2
-
+#if 0
 /* Normally, these three chunks come consecutively in a WAVE file */
 typedef struct WaveFMT {
 /* Not saved in the chunk we read:
@@ -76,6 +76,7 @@ typedef struct Chunk {
 	Uint32 length;
 	Uint8 *data;			/* Data includes magic and length */
 } Chunk;
+#endif
 
 /*********************************************/
 /* Define values for AIFF (IFF audio) format */
