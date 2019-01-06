@@ -78,7 +78,7 @@ void SDL_CloseAudio(void)
 int SDL_BuildAudioCVT(SDL_AudioCVT *cvt, Uint16 src_format, Uint8 src_channels, int src_rate, Uint16 dst_format, Uint8 dst_channels, int dst_rate)
 {
 	cvt->len_mult = 1;
-	cvt->len = SAMPLECOUNT*SAMPLESIZE;
+	cvt->len = SAMPLECOUNT*SAMPLESIZE*2;
 	return 0;
 }
 
@@ -89,7 +89,7 @@ int SDL_ConvertAudio(SDL_AudioCVT *cvt)
 
 	int32_t dac0;
 	int32_t dac1;
-
+/*
 	for(int i = cvt->len-2; i >= 0; i-=2)
 	{
 		Sint16 range = sbuf[i/2] >> 8; 
@@ -120,7 +120,7 @@ int SDL_ConvertAudio(SDL_AudioCVT *cvt)
 		ubuf[i] = (int16_t)dac1;
         ubuf[i + 1] = (int16_t)dac0;
 	}
-
+*/
 	return 0;
 }
 

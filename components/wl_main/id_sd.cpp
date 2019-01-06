@@ -586,9 +586,6 @@ printf("destsamples: %d\n", sizeof(headchunk) + sizeof(wavechunk) + destsamples 
 
     SoundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
-heap_caps_check_integrity_all(true);  
-SDL_Delay(1000);       
-printf("done\n");
 }
 
 int SD_PlayDigitized(word which,int leftpos,int rightpos)

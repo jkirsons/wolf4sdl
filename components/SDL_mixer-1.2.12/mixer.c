@@ -630,9 +630,11 @@ Check("4");
 #endif
 Check("5");  
 	/* Build the audio converter and create conversion buffers */
-	if ( wavespec.format != mixer.format ||
+	if ( false ) {
+	/*	wavespec.format != mixer.format ||
 		 wavespec.channels != mixer.channels ||
-		 wavespec.freq != mixer.freq ) {  			 
+		 wavespec.freq != mixer.freq ) { 
+	*/		  			 
 		if ( SDL_BuildAudioCVT(&wavecvt,
 				wavespec.format, wavespec.channels, wavespec.freq,
 				mixer.format, mixer.channels, mixer.freq) < 0 ) {

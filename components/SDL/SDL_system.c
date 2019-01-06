@@ -4,10 +4,12 @@
 
 void Check(const char *str)
 {
+/*
 	printf("%s - ", str);	
 	heap_caps_check_integrity_all(true);  
 	SDL_Delay(1000);    
 	printf("OK\n");
+*/	
 }
 
 struct SDL_mutex
