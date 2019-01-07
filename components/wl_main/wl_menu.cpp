@@ -646,6 +646,7 @@ DrawMainMenu (void)
 
     DrawMenu (&MainItems, &MainMenu[0]);
     VW_UpdateScreen ();
+    keyMode = 1;
 }
 
 #ifndef GOODTIMES
@@ -3177,14 +3178,14 @@ void SetupSaveGames()
             else
                 strcpy(savepath, name);
 
-            const int handle = open(savepath, O_RDONLY | O_BINARY);
+            const int handle = __open(savepath, O_RDONLY | O_BINARY);
             if(handle >= 0)
             {
                 char temp[32];
 
                 SaveGamesAvail[i] = 1;
-                read(handle, temp, 32);
-                close(handle);
+                __read(handle, temp, 32);
+                __close(handle);
                 strcpy(&SaveGameNames[i][0], temp);
             }
 #ifdef _arch_dreamcast
@@ -3281,7 +3282,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
         else SDL_Delay(5);
 
         CheckPause ();
-
+/*
         //
         // SEE IF ANY KEYS ARE PRESSED FOR INITIAL CHAR FINDING
         //
@@ -3320,7 +3321,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
                     }
             }
         }
-
+*/
         //
         // GET INPUT
         //
@@ -3680,6 +3681,7 @@ ReadAnyControl (ControlInfo * ci)
             ci->button3 = jb & 8;
         }
     }
+
 }
 
 

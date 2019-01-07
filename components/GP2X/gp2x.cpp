@@ -65,7 +65,7 @@ void GP2X_AdjustVolume( int direction )
 
 	printf( "Volume Change: %i\n", volume );
 
-	unsigned long soundDev = open("/dev/mixer", O_RDWR);
+	unsigned long soundDev =__open("/dev/mixer", O_RDWR);
 	if(soundDev)
 	{
 		int vol = ((volume << 8) | volume);

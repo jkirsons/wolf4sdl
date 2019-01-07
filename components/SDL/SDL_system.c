@@ -1,7 +1,8 @@
 #include "SDL_system.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <fcntl.h>
+#include <unistd.h>
 void Check(const char *str)
 {
 /*
@@ -208,6 +209,46 @@ int __stat(const char *path, struct stat *buf)
 {
 	SDL_LockDisplay();
 	int ret = stat ( path, buf );
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+int __open(const char *path, int oflag, ...)
+{
+	SDL_LockDisplay();
+	int ret = open(path, oflag);
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+int __close(int fildes)
+{
+	SDL_LockDisplay();
+	int ret = close(fildes);
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+ssize_t __read(int fildes, void *buf, size_t nbyte)
+{
+	SDL_LockDisplay();
+	ssize_t ret = read(fildes, buf, nbyte);
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+ssize_t __write(int fildes, const void *buf, size_t nbyte)
+{
+	SDL_LockDisplay();
+	ssize_t ret = write(fildes, buf, nbyte);
+	SDL_UnlockDisplay();
+	return ret;	
+}
+
+off_t __lseek(int fd, off_t offset, int whence)
+{
+	SDL_LockDisplay();
+	off_t ret = lseek(fd, offset, whence);
 	SDL_UnlockDisplay();
 	return ret;	
 }

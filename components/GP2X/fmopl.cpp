@@ -572,7 +572,7 @@ void InitSharedMemory()
 {
 	if(g_hMemory) return;
 	LOG_MSG("Once?\n");
-	g_hMemory = open("/dev/mem", O_RDWR);
+	g_hMemory =__open("/dev/mem", O_RDWR);
 	g_pusRegs = (unsigned short *) mmap(0, 0x10000,
 			PROT_READ|PROT_WRITE, MAP_SHARED, g_hMemory, 0xc0000000);
 

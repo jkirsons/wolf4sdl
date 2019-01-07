@@ -263,7 +263,14 @@ void VL_SetPalette (SDL_Color *palette, bool forceupdate)
     memcpy(curpal, palette, sizeof(SDL_Color) * 256);
 
     if(screenBits == 8)
+    {
         SDL_SetPalette(screen, SDL_PHYSPAL, palette, 0, 256);
+        if(forceupdate)
+        {
+            SDL_BlitSurface(curSurface, NULL, screen, NULL);
+            SDL_Flip(screen);
+        }
+    }
     else
     {
         SDL_SetPalette(curSurface, SDL_LOGPAL, palette, 0, 256);

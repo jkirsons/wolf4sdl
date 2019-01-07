@@ -94,8 +94,7 @@ SDL_JoystickInit(void)
 int
 SDL_NumJoysticks(void)
 {
-    int total_joysticks = 0;
-    return total_joysticks;
+    return 0;
 }
 
 /*
@@ -166,7 +165,7 @@ SDL_Joystick *
 SDL_JoystickOpen(int device_index)
 {
     SDL_Joystick *joystick = NULL;
-    return joystick;
+    return NULL;
 }
 
 

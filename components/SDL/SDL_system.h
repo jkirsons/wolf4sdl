@@ -69,4 +69,10 @@ int __fseek( FILE * stream, long int offset, int origin );
 size_t __fread( void *buffer, size_t size, size_t num, FILE *stream );
 int __stat(const char *path, struct stat *buf);
 
+int __open(const char *path, int oflag, ... );
+int __close(int fildes);
+ssize_t __read(int fildes, void *buf, size_t nbyte);
+ssize_t __write(int fildes, const void *buf, size_t nbyte);
+off_t __lseek(int fd, off_t offset, int whence);
+
 #endif

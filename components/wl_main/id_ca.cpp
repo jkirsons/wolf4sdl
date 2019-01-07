@@ -139,8 +139,8 @@ static int32_t GRFILEPOS(const size_t idx)
 
 void CAL_GetGrChunkLength (int chunk)
 {
-    lseek(grhandle,GRFILEPOS(chunk),SEEK_SET);
-    read(grhandle,&chunkexplen,sizeof(chunkexplen));
+    __lseek(grhandle,GRFILEPOS(chunk),SEEK_SET);
+    __read(grhandle,&chunkexplen,sizeof(chunkexplen));
     chunkcomplen = GRFILEPOS(chunk+1)-GRFILEPOS(chunk)-4;
 }
 
@@ -157,16 +157,16 @@ void CAL_GetGrChunkLength (int chunk)
 
 boolean CA_WriteFile (const char *filename, void *ptr, int32_t length)
 {
-    const int handle = open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
+    const int handle =__open(filename, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (handle == -1)
         return false;
 
     if (!write (handle,ptr,length))
     {
-        close (handle);
+        __close(handle);
         return false;
     }
-    close (handle);
+    __close(handle);
     return true;
 }
 
@@ -186,20 +186,20 @@ boolean CA_LoadFile (const char *filename, memptr *ptr)
 {
     int32_t size;
 
-    const int handle = open(filename, O_RDONLY | O_BINARY);
+    const int handle =__open(filename, O_RDONLY | O_BINARY);
     if (handle == -1)
         return false;
 
-    size = lseek(handle, 0, SEEK_END);
-    lseek(handle, 0, SEEK_SET);
+    size = __lseek(handle, 0, SEEK_END);
+    __lseek(handle, 0, SEEK_SET);
     *ptr=malloc(size);
     CHECKMALLOCRESULT(*ptr);
     if (!read (handle,*ptr,size))
     {
-        close (handle);
+        __close(handle);
         return false;
     }
-    close (handle);
+    __close(handle);
     return true;
 }
 
@@ -464,23 +464,23 @@ void CAL_SetupGrFile (void)
     strcpy(fname,gdictname);
     strcat(fname,graphext);
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle =__open(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
         CA_CannotOpen(fname);
 
-    read(handle, grhuffman, sizeof(grhuffman));
-    close(handle);
+    __read(handle, grhuffman, sizeof(grhuffman));
+   __close(handle);
 
     // load the data offsets from ???head.ext
     strcpy(fname,gheadname);
     strcat(fname,graphext);
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle =__open(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
         CA_CannotOpen(fname);
 
-    long headersize = lseek(handle, 0, SEEK_END);
-    lseek(handle, 0, SEEK_SET);
+    long headersize = __lseek(handle, 0, SEEK_END);
+    __lseek(handle, 0, SEEK_SET);
 
 #ifndef APOGEE_1_0
 	int expectedsize = lengthof(grstarts) - numEpisodesMissing;
@@ -496,8 +496,8 @@ void CAL_SetupGrFile (void)
             fname, headersize / 3, expectedsize);
 
     byte data[lengthof(grstarts) * 3];
-    read(handle, data, sizeof(data));
-    close(handle);
+    __read(handle, data, sizeof(data));
+   __close(handle);
 
     const byte* d = data;
     for (int32_t* i = grstarts; i != endof(grstarts); ++i)
@@ -514,7 +514,7 @@ void CAL_SetupGrFile (void)
     strcpy(fname,gfilename);
     strcat(fname,graphext);
 
-    grhandle = open(fname, O_RDONLY | O_BINARY);
+    grhandle =__open(fname, O_RDONLY | O_BINARY);
     if (grhandle == -1)
         CA_CannotOpen(fname);
 
@@ -556,15 +556,15 @@ void CAL_SetupMapFile (void)
     strcpy(fname,mheadname);
     strcat(fname,extension);
 
-    handle = open(fname, O_RDONLY | O_BINARY);
+    handle =__open(fname, O_RDONLY | O_BINARY);
     if (handle == -1)
         CA_CannotOpen(fname);
 
     length = NUMMAPS*4+2; // used to be "filelength(handle);"
     mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));
     CHECKMALLOCRESULT(tinf);
-    read(handle, tinf, length);
-    close(handle);
+    __read(handle, tinf, length);
+   __close(handle);
 
     RLEWtag=tinf->RLEWtag;
 
@@ -575,14 +575,14 @@ void CAL_SetupMapFile (void)
     strcpy(fname, mfilecama);
     strcat(fname, extension);
 
-    maphandle = open(fname, O_RDONLY | O_BINARY);
+    maphandle =__open(fname, O_RDONLY | O_BINARY);
     if (maphandle == -1)
         CA_CannotOpen(fname);
 #else
     strcpy(fname,mfilename);
     strcat(fname,extension);
 
-    maphandle = open(fname, O_RDONLY | O_BINARY);
+    maphandle =__open(fname, O_RDONLY | O_BINARY);
     if (maphandle == -1)
         CA_CannotOpen(fname);
 #endif
@@ -598,7 +598,7 @@ void CAL_SetupMapFile (void)
 
         mapheaderseg[i]=(maptype *) malloc(sizeof(maptype));
         CHECKMALLOCRESULT(mapheaderseg[i]);
-        lseek(maphandle,pos,SEEK_SET);
+        __lseek(maphandle,pos,SEEK_SET);
         read (maphandle,(memptr)mapheaderseg[i],sizeof(maptype));
     }
 
@@ -647,7 +647,7 @@ void CAL_SetupAudioFile (void)
     strcpy(fname,afilename);
     strcat(fname,audioext);
 
-    audiohandle = open(fname, O_RDONLY | O_BINARY);
+    audiohandle =__open(fname, O_RDONLY | O_BINARY);
     if (audiohandle == -1)
         CA_CannotOpen(fname);
 }
@@ -669,7 +669,7 @@ void CA_Startup (void)
 {
 #ifdef PROFILE
     unlink ("PROFILE.TXT");
-    profilehandle = open("PROFILE.TXT", O_CREAT | O_WRONLY | O_TEXT);
+    profilehandle =__open("PROFILE.TXT", O_CREAT | O_WRONLY | O_TEXT);
 #endif
 
     CAL_SetupMapFile ();
@@ -697,11 +697,11 @@ void CA_Shutdown (void)
     int i,start = 0;
 
     if(maphandle != -1)
-        close(maphandle);
+       __close(maphandle);
     if(grhandle != -1)
-        close(grhandle);
+       __close(grhandle);
     if(audiohandle != -1)
-        close(audiohandle);
+       __close(audiohandle);
 
     for(i=0; i<NUMCHUNKS; i++)
         UNCACHEGRCHUNK(i);
@@ -744,8 +744,8 @@ int32_t CA_CacheAudioChunk (int chunk)
     audiosegs[chunk]=(byte *) malloc(size);
     CHECKMALLOCRESULT(audiosegs[chunk]);
 
-    lseek(audiohandle,pos,SEEK_SET);
-    read(audiohandle,audiosegs[chunk],size);
+    __lseek(audiohandle,pos,SEEK_SET);
+    __read(audiohandle,audiosegs[chunk],size);
 
     return size;
 }
@@ -758,8 +758,8 @@ void CA_CacheAdlibSoundChunk (int chunk)
     if (audiosegs[chunk])
         return;                        // already in memory
 
-    lseek(audiohandle, pos, SEEK_SET);
-    read(audiohandle, bufferseg, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
+    __lseek(audiohandle, pos, SEEK_SET);
+    __read(audiohandle, bufferseg, ORIG_ADLIBSOUND_SIZE - 1);   // without data[1]
 
     AdLibSound *sound = (AdLibSound *) malloc(size + sizeof(AdLibSound) - ORIG_ADLIBSOUND_SIZE);
     CHECKMALLOCRESULT(sound);
@@ -785,7 +785,7 @@ void CA_CacheAdlibSoundChunk (int chunk)
     sound->inst.unused[2] = *ptr++;
     sound->block = *ptr++;
 
-    read(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
+    __read(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
 
     audiosegs[chunk]=(byte *) sound;
 }
@@ -940,18 +940,18 @@ void CA_CacheGrChunk (int chunk)
 
     compressed = GRFILEPOS(next)-pos;
 
-    lseek(grhandle,pos,SEEK_SET);
+    __lseek(grhandle,pos,SEEK_SET);
 
     if (compressed<=BUFFERSIZE)
     {
-        read(grhandle,bufferseg,compressed);
+        __read(grhandle,bufferseg,compressed);
         source = bufferseg;
     }
     else
     {
         source = (int32_t *) malloc(compressed);
         CHECKMALLOCRESULT(source);
-        read(grhandle,source,compressed);
+        __read(grhandle,source,compressed);
     }
 
     CAL_ExpandGrChunk (chunk,source);
@@ -990,11 +990,11 @@ void CA_CacheScreen (int chunk)
         next++;
     compressed = GRFILEPOS(next)-pos;
 
-    lseek(grhandle,pos,SEEK_SET);
+    __lseek(grhandle,pos,SEEK_SET);
 
     bigbufferseg=malloc(compressed);
     CHECKMALLOCRESULT(bigbufferseg);
-    read(grhandle,bigbufferseg,compressed);
+    __read(grhandle,bigbufferseg,compressed);
     source = (int32_t *) bigbufferseg;
 
     expanded = *source++;
@@ -1062,7 +1062,7 @@ void CA_CacheMap (int mapnum)
 
         dest = mapsegs[plane];
 
-        lseek(maphandle,pos,SEEK_SET);
+        __lseek(maphandle,pos,SEEK_SET);
         if (compressed<=BUFFERSIZE)
             source = (word *) bufferseg;
         else
@@ -1072,7 +1072,7 @@ void CA_CacheMap (int mapnum)
             source = (word *) bigbufferseg;
         }
 
-        read(maphandle,source,compressed);
+        __read(maphandle,source,compressed);
 #ifdef CARMACIZED
         //
         // unhuffman, then unRLEW

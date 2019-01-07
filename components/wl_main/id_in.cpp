@@ -402,6 +402,8 @@ IN_Startup(void)
     MousePresent = false;
 #elif defined(_arch_dreamcast)
     MousePresent = DC_MousePresent();
+#elif defined(PLATFORM_ESP32)
+    MousePresent = false;
 #else
     MousePresent = true;
 #endif
