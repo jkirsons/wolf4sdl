@@ -8,10 +8,11 @@
 #include "freertos/queue.h"
 
 #include "SDL_rwops.h"
+#include "SDL_mixer.h"
 
 // Needed for calling the actual sound output.
 #define SAMPLECOUNT		512
-#define SAMPLERATE		11025 * 1	// Hz
+#define SAMPLERATE		7042 * 2	// Hz
 #define SAMPLESIZE		2   	// 16bit
 
 typedef struct{

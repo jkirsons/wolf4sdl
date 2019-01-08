@@ -567,7 +567,6 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 		}
 		return(NULL);
 	}
-Check("1");  
 	/* Allocate the chunk memory */
 	chunk = (Mix_Chunk *)SDL_malloc(sizeof(Mix_Chunk));
 	if ( chunk == NULL ) {
@@ -578,13 +577,10 @@ Check("1");
 		return(NULL);
 	}
 
-Check("2");  
 	/* Find out what kind of audio file this is */
 	magic = SDL_ReadLE32(src);
-	/* Seek backwards for compatibility with older loaders */
-Check("3");  	
-	SDL_RWseek(src, -(int)sizeof(Uint32), RW_SEEK_CUR);
-Check("4");  
+	/* Seek backwards for compatibility with older loaders */	
+	SDL_RWseek(src, -(int)sizeof(Uint32), RW_SEEK_CUR); 
 	switch (magic) {
 		case WAVE:
 		case RIFF:
@@ -628,7 +624,6 @@ Check("4");
 	PrintFormat("Audio device", &mixer);
 	PrintFormat("-- Wave file", &wavespec);
 #endif
-Check("5");  
 	/* Build the audio converter and create conversion buffers */
 	if ( false ) {
 	/*	wavespec.format != mixer.format ||
@@ -643,19 +638,16 @@ Check("5");
 			return(NULL);
 		}
 		samplesize = ((wavespec.format & 0xFF)/8)*wavespec.channels;
-		wavecvt.len = chunk->alen & ~(samplesize-1);  		
-Check("6");  		
+		wavecvt.len = chunk->alen & ~(samplesize-1);  				
 		wavecvt.buf = (Uint8 *)SDL_calloc(1, wavecvt.len*wavecvt.len_mult);
 		if ( wavecvt.buf == NULL ) {		
 			SDL_SetError("Out of memory");
 			SDL_free(chunk->abuf);
 			SDL_free(chunk);
 			return(NULL);
-		}
-Check("7");  		
+		}	
 		memcpy(wavecvt.buf, chunk->abuf, chunk->alen);
-		SDL_free(chunk->abuf);
-Check("7.5");  		
+		SDL_free(chunk->abuf);	
 		/* Run the audio converter */
 		if ( SDL_ConvertAudio(&wavecvt) < 0 ) {	
 			SDL_free(wavecvt.buf);
@@ -664,11 +656,10 @@ Check("7.5");
 		}  
 		chunk->abuf = wavecvt.buf;
 		chunk->alen = wavecvt.len_cvt;
-	}
+	} 
 
 	chunk->allocated = 1;
-	chunk->volume = MIX_MAX_VOLUME;
-Check("8");  
+	chunk->volume = MIX_MAX_VOLUME; 
 	return(chunk);
 }
 

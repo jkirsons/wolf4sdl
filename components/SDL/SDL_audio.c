@@ -7,6 +7,47 @@ bool paused = true;
 bool locked = false;
 xSemaphoreHandle xSemaphoreAudio = NULL;
 
+IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, int len)
+{
+	Sint16 *sbuf = buf;
+	Uint16 *ubuf = buf;
+
+	int32_t dac0;
+	int32_t dac1;
+
+	if(buf != NULL && len > 0)
+		for(int i = len-2; i >= 0; i-=2)
+		{
+			Sint16 range = sbuf[i/2] >> 8; 
+
+			// Convert to differential output
+			if (range > 127)
+			{
+				dac1 = (range - 127);
+				dac0 = 127;
+			}
+			else if (range < -127)
+			{
+				dac1  = (range + 127);
+				dac0 = -127;
+			}
+			else
+			{
+				dac1 = 0;
+				dac0 = range;
+			}
+
+			dac0 += 0x80;
+			dac1 = 0x80 - dac1;
+
+			dac0 <<= 8;
+			dac1 <<= 8;
+
+			ubuf[i] = (int16_t)dac1;
+			ubuf[i + 1] = (int16_t)dac0;
+		}
+}
+
 IRAM_ATTR void updateTask(void *arg)
 {
   size_t bytesWritten;
@@ -15,7 +56,8 @@ IRAM_ATTR void updateTask(void *arg)
 	  if(!paused && /*xSemaphoreAudio != NULL*/ !locked ){
 		  //xSemaphoreTake( xSemaphoreAudio, portMAX_DELAY );
 		  memset(sdl_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
-		  (*as.callback)(NULL, sdl_buffer, SAMPLECOUNT*SAMPLESIZE );
+		  (*as.callback)(NULL, sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
+		  audioToOdroidGoFormat(sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
 		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, sdl_buffer, SAMPLECOUNT*SAMPLESIZE*2, &bytesWritten, 50 / portTICK_PERIOD_MS));
 		  //xSemaphoreGive( xSemaphoreAudio );
 	  } else
@@ -25,7 +67,7 @@ IRAM_ATTR void updateTask(void *arg)
 
 void SDL_AudioInit()
 {
-	sdl_buffer = heap_caps_malloc(SAMPLECOUNT * SAMPLESIZE * 2, MALLOC_CAP_8BIT | MALLOC_CAP_DMA);
+	sdl_buffer = heap_caps_malloc(SAMPLECOUNT * SAMPLESIZE * 2, MALLOC_CAP_8BIT);
 
 	static const i2s_config_t i2s_config = {
 	.mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,
@@ -84,43 +126,8 @@ int SDL_BuildAudioCVT(SDL_AudioCVT *cvt, Uint16 src_format, Uint8 src_channels, 
 
 int SDL_ConvertAudio(SDL_AudioCVT *cvt)
 {
-	Sint16 *sbuf = cvt->buf;
-	Uint16 *ubuf = cvt->buf;
 
-	int32_t dac0;
-	int32_t dac1;
-/*
-	for(int i = cvt->len-2; i >= 0; i-=2)
-	{
-		Sint16 range = sbuf[i/2] >> 8; 
 
-		// Convert to differential output
-		if (range > 127)
-		{
-			dac1 = (range - 127);
-			dac0 = 127;
-		}
-		else if (range < -127)
-		{
-			dac1  = (range + 127);
-			dac0 = -127;
-		}
-		else
-		{
-			dac1 = 0;
-			dac0 = range;
-		}
-
-		dac0 += 0x80;
-		dac1 = 0x80 - dac1;
-
-		dac0 <<= 8;
-		dac1 <<= 8;
-
-		ubuf[i] = (int16_t)dac1;
-        ubuf[i + 1] = (int16_t)dac0;
-	}
-*/
 	return 0;
 }
 
@@ -142,6 +149,6 @@ void SDL_UnlockAudio(void)
  * Moved here from SDL_mixer.c, since it relies on internals of an opened
  *  audio device (and is deprecated, by the way!).
  */
-void SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume)
-{
-}
+//void SDL_MixAudio(Uint8 * dst, const Uint8 * src, Uint32 len, int volume)
+//{
+//}
