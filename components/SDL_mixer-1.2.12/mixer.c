@@ -625,6 +625,8 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 	PrintFormat("-- Wave file", &wavespec);
 #endif
 	/* Build the audio converter and create conversion buffers */
+//printf("Freq: src: %d, dest: %d\n", wavespec.freq, mixer.freq);	
+//printf("channels: %d\n", wavespec.channels);
 	if ( false ) {
 	/*	wavespec.format != mixer.format ||
 		 wavespec.channels != mixer.channels ||

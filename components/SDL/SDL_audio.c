@@ -55,10 +55,10 @@ IRAM_ATTR void updateTask(void *arg)
   {
 	  if(!paused && /*xSemaphoreAudio != NULL*/ !locked ){
 		  //xSemaphoreTake( xSemaphoreAudio, portMAX_DELAY );
-		  memset(sdl_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
+		  memset(sdl_buffer, 0, SAMPLECOUNT*SAMPLESIZE);
 		  (*as.callback)(NULL, sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
 		  audioToOdroidGoFormat(sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
-		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, sdl_buffer, SAMPLECOUNT*SAMPLESIZE*2, &bytesWritten, 50 / portTICK_PERIOD_MS));
+		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, sdl_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 50 / portTICK_PERIOD_MS));
 		  //xSemaphoreGive( xSemaphoreAudio );
 	  } else
 		  vTaskDelay( 5 );
