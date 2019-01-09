@@ -251,7 +251,7 @@ boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 ====================
 */
 
-int CalcHeight()
+IRAM_ATTR int CalcHeight()
 {
     fixed z = FixedMul(xintercept - viewx, viewcos)
         - FixedMul(yintercept - viewy, viewsin);
@@ -275,7 +275,7 @@ byte *postsource;
 int postx;
 int postwidth;
 
-void ScalePost()
+IRAM_ATTR void ScalePost()
 {
     int ywcount, yoffs, yw, yd, yendoffs;
     byte col;
@@ -353,7 +353,7 @@ void GlobalScalePost(byte *vidbuf, unsigned pitch)
 ====================
 */
 
-void HitVertWall (void)
+IRAM_ATTR void HitVertWall (void)
 {
     int wallpic;
     int texture;
@@ -419,7 +419,7 @@ void HitVertWall (void)
 ====================
 */
 
-void HitHorizWall (void)
+IRAM_ATTR void HitHorizWall (void)
 {
     int wallpic;
     int texture;
@@ -633,7 +633,7 @@ byte vgaCeiling[]=
 =====================
 */
 
-void VGAClearScreen (void)
+IRAM_ATTR void VGAClearScreen (void)
 {
     byte ceiling=vgaCeiling[gamestate.episode*10+mapon];
 
@@ -662,7 +662,7 @@ void VGAClearScreen (void)
 =====================
 */
 
-int CalcRotate (objtype *ob)
+IRAM_ATTR int CalcRotate (objtype *ob)
 {
     int angle, viewangle;
 
@@ -1091,7 +1091,7 @@ void CalcTics (void)
 
 //==========================================================================
 
-void AsmRefresh()
+IRAM_ATTR void AsmRefresh()
 {
     int32_t xstep,ystep;
     longword xpartial,ypartial;
@@ -1504,7 +1504,7 @@ passhoriz:
 ====================
 */
 
-void WallRefresh (void)
+IRAM_ATTR void WallRefresh (void)
 {
     xpartialdown = viewx&(TILEGLOBAL-1);
     xpartialup = TILEGLOBAL-xpartialdown;
@@ -1543,7 +1543,7 @@ void CalcViewVariables()
 ========================
 */
 
-void    ThreeDRefresh (void)
+IRAM_ATTR void    ThreeDRefresh (void)
 {
 //
 // clear out the traced array

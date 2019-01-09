@@ -595,7 +595,7 @@ int SD_PlayDigitized(word which,int leftpos,int rightpos)
 
     if (which >= NumDigi)
         Quit("SD_PlayDigitized: bad sound number %i", which);
-
+printf("SD_PlayDigitized: %d\n", which);
     int channel = SD_GetChannelForDigi(which);
     SD_SetPosition(channel, leftpos,rightpos);
 
@@ -1347,7 +1347,7 @@ SD_StartMusic(int chunk)
 }
 
 void
-SD_ContinueMusic(int chunk, int startoffs)
+IRAM_ATTR SD_ContinueMusic(int chunk, int startoffs)
 {
     SD_MusicOff();
 

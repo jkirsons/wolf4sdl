@@ -55,7 +55,7 @@ IRAM_ATTR void updateTask(void *arg)
   {
 	  if(!paused && /*xSemaphoreAudio != NULL*/ !locked ){
 		  //xSemaphoreTake( xSemaphoreAudio, portMAX_DELAY );
-		  memset(sdl_buffer, 0, SAMPLECOUNT*SAMPLESIZE);
+		  memset(sdl_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
 		  (*as.callback)(NULL, sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
 		  audioToOdroidGoFormat(sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
 		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, sdl_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 50 / portTICK_PERIOD_MS));
@@ -74,8 +74,8 @@ void SDL_AudioInit()
 	.sample_rate = SAMPLERATE,
 	.bits_per_sample = SAMPLESIZE*8, /* the DAC module will only take the 8bits from MSB */
 	.channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-	.communication_format = I2S_COMM_FORMAT_I2S_MSB,
-	.dma_buf_count = 4,
+	.communication_format = I2S_COMM_FORMAT_I2S_LSB,
+	.dma_buf_count = 6,
 	.dma_buf_len = 256,
 	.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,                                //Interrupt level 1
     .use_apll = 0

@@ -320,7 +320,7 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
     green = green * 255 / 63;
     blue = blue * 255 / 63;
 
-	VL_WaitVBL(1);
+	//VL_WaitVBL(1);
 	VL_GetPalette(palette1);
 	memcpy(palette2, palette1, sizeof(SDL_Color) * 256);
 
@@ -346,7 +346,7 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 			newptr++;
 		}
 
-		if(!usedoublebuffering || screenBits == 8) VL_WaitVBL(1);
+		//if(!usedoublebuffering || screenBits == 8) VL_WaitVBL(1);
 		VL_SetPalette (palette2, true);
 	}
 
@@ -371,7 +371,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 {
 	int i,j,delta;
 
-	VL_WaitVBL(1);
+	//VL_WaitVBL(1);
 	VL_GetPalette(palette1);
 	memcpy(palette2, palette1, sizeof(SDL_Color) * 256);
 
@@ -390,7 +390,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 			palette2[j].b = palette1[j].b + delta * i / steps;
 		}
 
-		if(!usedoublebuffering || screenBits == 8) VL_WaitVBL(1);
+		//if(!usedoublebuffering || screenBits == 8) VL_WaitVBL(1);
 		VL_SetPalette(palette2, true);
 	}
 
@@ -409,7 +409,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 =============================================================================
 */
 
-byte *VL_LockSurface(SDL_Surface *surface)
+IRAM_ATTR byte *VL_LockSurface(SDL_Surface *surface)
 {
     if(SDL_MUSTLOCK(surface))
     {
@@ -419,7 +419,7 @@ byte *VL_LockSurface(SDL_Surface *surface)
     return (byte *) surface->pixels;
 }
 
-void VL_UnlockSurface(SDL_Surface *surface)
+IRAM_ATTR void VL_UnlockSurface(SDL_Surface *surface)
 {
     if(SDL_MUSTLOCK(surface))
     {
@@ -589,7 +589,7 @@ void VL_MemToLatch(byte *source, int width, int height,
 =================
 */
 
-void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, int desty)
+IRAM_ATTR void VL_MemToScreenScaledCoord (byte *source, int width, int height, int destx, int desty)
 {
     assert(destx >= 0 && destx + width * scaleFactor <= screenWidth
             && desty >= 0 && desty + height * scaleFactor <= screenHeight
@@ -663,7 +663,7 @@ void VL_MemToScreenScaledCoord (byte *source, int origwidth, int origheight, int
 =================
 */
 
-void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
+IRAM_ATTR void VL_LatchToScreenScaledCoord(SDL_Surface *source, int xsrc, int ysrc,
     int width, int height, int scxdest, int scydest)
 {
 	assert(scxdest >= 0 && scxdest + width * scaleFactor <= screenWidth

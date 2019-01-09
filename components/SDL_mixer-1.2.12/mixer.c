@@ -234,14 +234,14 @@ void Mix_Quit()
 	initialized = 0;
 }
 
-static int _Mix_remove_all_effects(int channel, effect_info **e);
+IRAM_ATTR static int _Mix_remove_all_effects(int channel, effect_info **e);
 
 /*
  * rcg06122001 Cleanup effect callbacks.
  *  MAKE SURE SDL_LockAudio() is called before this (or you're in the
  *   audio callback).
  */
-static void _Mix_channel_done_playing(int channel)
+IRAM_ATTR static void _Mix_channel_done_playing(int channel)
 {
 	if (channel_done_callback) {
 	    channel_done_callback(channel);
@@ -255,7 +255,7 @@ static void _Mix_channel_done_playing(int channel)
 }
 
 
-static void *Mix_DoEffects(int chan, void *snd, int len)
+IRAM_ATTR static void *Mix_DoEffects(int chan, void *snd, int len)
 {
 	int posteffect = (chan == MIX_CHANNEL_POST);
 	effect_info *e = ((posteffect) ? posteffects : mix_channel[chan].effects);
@@ -284,7 +284,7 @@ static void *Mix_DoEffects(int chan, void *snd, int len)
 
 
 /* Mixing function */
-static void mix_channels(void *udata, Uint8 *stream, int len)
+IRAM_ATTR static void mix_channels(void *udata, Uint8 *stream, int len)
 {
 	Uint8 *mix_input;
 	int i, mixable, volume = SDL_MIX_MAXVOLUME;
@@ -827,7 +827,7 @@ static int checkchunkintegral(Mix_Chunk *chunk)
 int Mix_PlayChannelTimed(int which, Mix_Chunk *chunk, int loops, int ticks)
 {
 	int i;
-
+//printf("Mix_PlayChannelTimed(%d)\n", which);
 	/* Don't play null pointers :-) */
 	if ( chunk == NULL ) {
 		Mix_SetError("Tried to play a NULL chunk");
@@ -899,7 +899,7 @@ int Mix_ExpireChannel(int which, int ticks)
 int Mix_FadeInChannelTimed(int which, Mix_Chunk *chunk, int loops, int ms, int ticks)
 {
 	int i;
-
+//printf("Mix_FadeInChannelTimed(%d)\n", which);
 	/* Don't play null pointers :-) */
 	if ( chunk == NULL ) {
 		return(-1);
@@ -951,7 +951,7 @@ int Mix_FadeInChannelTimed(int which, Mix_Chunk *chunk, int loops, int ms, int t
 }
 
 /* Set volume of a particular channel */
-int Mix_Volume(int which, int volume)
+IRAM_ATTR int Mix_Volume(int which, int volume)
 {
 	int i;
 	int prev_volume = 0;

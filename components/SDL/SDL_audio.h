@@ -11,7 +11,7 @@
 #include "SDL_mixer.h"
 
 // Needed for calling the actual sound output.
-#define SAMPLECOUNT		512
+#define SAMPLECOUNT		1006
 #define SAMPLERATE		7042 * 1	// Hz
 #define SAMPLESIZE		2   	// 16bit
 

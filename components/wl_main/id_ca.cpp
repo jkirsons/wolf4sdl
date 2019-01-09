@@ -733,7 +733,7 @@ void CA_Shutdown (void)
 ======================
 */
 
-int32_t CA_CacheAudioChunk (int chunk)
+IRAM_ATTR int32_t CA_CacheAudioChunk (int chunk)
 {
     int32_t pos = audiostarts[chunk];
     int32_t size = audiostarts[chunk+1]-pos;

@@ -98,7 +98,7 @@ int     param_audiobuffer = 128;
 #elif defined(PLATFORM_ESP32)
 int     param_joystickhat = -1;
 int     param_samplerate = 7042;       // higher samplerates result in "out of memory"
-int     param_audiobuffer = 512;
+int     param_audiobuffer = 1006;
 #else
 int     param_joystickhat = -1;
 int     param_samplerate = 44100;
@@ -526,18 +526,18 @@ boolean LoadTheGame(FILE *file,int x,int y)
     checksum = 0;
 
     DiskFlopAnim(x,y);
-    fread (&gamestate,sizeof(gamestate),1,file);
+    __fread(&gamestate,sizeof(gamestate),1,file);
     checksum = DoChecksum((byte *)&gamestate,sizeof(gamestate),checksum);
 
     DiskFlopAnim(x,y);
-    fread (&LevelRatios[0],sizeof(LRstruct)*LRpack,1,file);
+    __fread(&LevelRatios[0],sizeof(LRstruct)*LRpack,1,file);
     checksum = DoChecksum((byte *)&LevelRatios[0],sizeof(LRstruct)*LRpack,checksum);
 
     DiskFlopAnim(x,y);
     SetupGameLevel ();
 
     DiskFlopAnim(x,y);
-    fread (tilemap,sizeof(tilemap),1,file);
+    __fread(tilemap,sizeof(tilemap),1,file);
     checksum = DoChecksum((byte *)tilemap,sizeof(tilemap),checksum);
 
     DiskFlopAnim(x,y);
@@ -547,7 +547,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
     {
         for(int j=0;j<MAPSIZE;j++)
         {
-            fread (&actnum,sizeof(word),1,file);
+            __fread(&actnum,sizeof(word),1,file);
             checksum = DoChecksum((byte *) &actnum,sizeof(word),checksum);
             if(actnum&0x8000)
                 actorat[i][j]=objlist+(actnum&0x7fff);
@@ -556,18 +556,18 @@ boolean LoadTheGame(FILE *file,int x,int y)
         }
     }
 
-    fread (areaconnect,sizeof(areaconnect),1,file);
-    fread (areabyplayer,sizeof(areabyplayer),1,file);
+    __fread(areaconnect,sizeof(areaconnect),1,file);
+    __fread(areabyplayer,sizeof(areabyplayer),1,file);
 
     InitActorList ();
     DiskFlopAnim(x,y);
-    fread (player,sizeof(*player),1,file);
+    __fread(player,sizeof(*player),1,file);
     player->state=(statetype *) ((uintptr_t)player->state+(uintptr_t)&s_player);
 
     while (1)
     {
         DiskFlopAnim(x,y);
-        fread (&nullobj,sizeof(nullobj),1,file);
+        __fread(&nullobj,sizeof(nullobj),1,file);
         if (nullobj.active == ac_badobject)
             break;
         GetNewActor ();
@@ -578,7 +578,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
 
     DiskFlopAnim(x,y);
     word laststatobjnum;
-    fread (&laststatobjnum,sizeof(laststatobjnum),1,file);
+    __fread(&laststatobjnum,sizeof(laststatobjnum),1,file);
     laststatobj=statobjlist+laststatobjnum;
     checksum = DoChecksum((byte *)&laststatobjnum,sizeof(laststatobjnum),checksum);
 
@@ -592,24 +592,24 @@ boolean LoadTheGame(FILE *file,int x,int y)
     }
 
     DiskFlopAnim(x,y);
-    fread (doorposition,sizeof(doorposition),1,file);
+    __fread(doorposition,sizeof(doorposition),1,file);
     checksum = DoChecksum((byte *)doorposition,sizeof(doorposition),checksum);
     DiskFlopAnim(x,y);
-    fread (doorobjlist,sizeof(doorobjlist),1,file);
+    __fread(doorobjlist,sizeof(doorobjlist),1,file);
     checksum = DoChecksum((byte *)doorobjlist,sizeof(doorobjlist),checksum);
 
     DiskFlopAnim(x,y);
-    fread (&pwallstate,sizeof(pwallstate),1,file);
+    __fread(&pwallstate,sizeof(pwallstate),1,file);
     checksum = DoChecksum((byte *)&pwallstate,sizeof(pwallstate),checksum);
-    fread (&pwalltile,sizeof(pwalltile),1,file);
+    __fread(&pwalltile,sizeof(pwalltile),1,file);
     checksum = DoChecksum((byte *)&pwalltile,sizeof(pwalltile),checksum);
-    fread (&pwallx,sizeof(pwallx),1,file);
+    __fread(&pwallx,sizeof(pwallx),1,file);
     checksum = DoChecksum((byte *)&pwallx,sizeof(pwallx),checksum);
-    fread (&pwally,sizeof(pwally),1,file);
+    __fread(&pwally,sizeof(pwally),1,file);
     checksum = DoChecksum((byte *)&pwally,sizeof(pwally),checksum);
-    fread (&pwalldir,sizeof(pwalldir),1,file);
+    __fread(&pwalldir,sizeof(pwalldir),1,file);
     checksum = DoChecksum((byte *)&pwalldir,sizeof(pwalldir),checksum);
-    fread (&pwallpos,sizeof(pwallpos),1,file);
+    __fread(&pwallpos,sizeof(pwallpos),1,file);
     checksum = DoChecksum((byte *)&pwallpos,sizeof(pwallpos),checksum);
 
     if (gamestate.secretcount)      // assign valid floorcodes under moved pushwalls
@@ -639,9 +639,9 @@ boolean LoadTheGame(FILE *file,int x,int y)
 
     Thrust(0,0);    // set player->areanumber to the floortile you're standing on
 
-    fread (&oldchecksum,sizeof(oldchecksum),1,file);
+    __fread(&oldchecksum,sizeof(oldchecksum),1,file);
 
-    fread (&lastgamemusicoffset,sizeof(lastgamemusicoffset),1,file);
+    __fread(&lastgamemusicoffset,sizeof(lastgamemusicoffset),1,file);
     if(lastgamemusicoffset<0) lastgamemusicoffset=0;
 
 

@@ -931,7 +931,7 @@ void StartMusic ()
     SD_StartMusic(STARTMUSIC + lastmusicchunk);
 }
 
-void ContinueMusic (int offs)
+IRAM_ATTR void ContinueMusic (int offs)
 {
     SD_MusicOff ();
     lastmusicchunk = (musicnames) songs[gamestate.mapon + gamestate.episode * 10];
@@ -1259,7 +1259,7 @@ think:
 int32_t funnyticount;
 
 
-void PlayLoop (void)
+IRAM_ATTR void PlayLoop (void)
 {
 #if defined(USE_FEATUREFLAGS) && defined(USE_CLOUDSKY)
     if(GetFeatureFlags() & FF_CLOUDSKY)
