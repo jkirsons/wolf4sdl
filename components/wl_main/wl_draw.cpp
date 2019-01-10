@@ -194,7 +194,7 @@ void TransformActor (objtype *ob)
 ========================
 */
 
-boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
+IRAM_ATTR boolean TransformTile (int tx, int ty, short *dispx, short *dispheight)
 {
     fixed gx,gy,gxt,gyt,nx,ny;
 
@@ -688,7 +688,7 @@ IRAM_ATTR int CalcRotate (objtype *ob)
     return angle/(ANGLES/8);
 }
 
-void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
+IRAM_ATTR void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
 {
     t_compshape *shape;
     unsigned scale,pixheight;
@@ -779,7 +779,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
     }
 }
 
-void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
+IRAM_ATTR void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
 {
     t_compshape   *shape;
     unsigned scale,pixheight;
@@ -880,7 +880,7 @@ typedef struct
 visobj_t vislist[MAXVISABLE];
 visobj_t *visptr,*visstep,*farthest;
 
-void DrawScaleds (void)
+IRAM_ATTR void DrawScaleds (void)
 {
     int      i,least,numvisable,height;
     byte     *tilespot,*visspot;

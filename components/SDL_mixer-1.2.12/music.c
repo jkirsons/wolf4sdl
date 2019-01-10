@@ -231,7 +231,7 @@ static int music_halt_or_loop (void)
 
 
 /* Mixing function */
-void music_mixer(void *udata, Uint8 *stream, int len)
+IRAM_ATTR void music_mixer(void *udata, Uint8 *stream, int len)
 {
 	int left = 0;
 

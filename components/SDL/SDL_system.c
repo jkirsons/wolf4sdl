@@ -24,6 +24,7 @@ struct SDL_mutex
 
 void SDL_Delay(Uint32 ms)
 {
+	//printf("Delay %d ", ms);
     const TickType_t xDelay = ms / portTICK_PERIOD_MS;
     vTaskDelay( xDelay );
 }

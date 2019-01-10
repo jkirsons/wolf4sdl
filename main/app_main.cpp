@@ -25,5 +25,5 @@ void wolfTask(void *pvParameters)
 extern "C" void app_main(void)
 //void app_main(void)
 {
-	xTaskCreatePinnedToCore(&wolfTask, "wolfTask", 32000, NULL, 5, NULL, 0/*tskNO_AFFINITY*/);
+	xTaskCreatePinnedToCore(&wolfTask, "wolfTask", 22000, NULL, 5, NULL, 0/*tskNO_AFFINITY*/);
 }

@@ -61,7 +61,7 @@ IRAM_ATTR void updateTask(void *arg)
 		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, sdl_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 50 / portTICK_PERIOD_MS));
 		  //xSemaphoreGive( xSemaphoreAudio );
 	  } else
-		  vTaskDelay( 5 );
+		  vTaskDelay( 2 );
   }
 }
 
