@@ -2,23 +2,29 @@
 
 SDL_AudioSpec as;
 unsigned char *sdl_buffer;
+unsigned char *out_buffer;
 void *user_data;
 bool paused = true;
 bool locked = false;
 xSemaphoreHandle xSemaphoreAudio = NULL;
 
-IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, int len)
+char global_volume = 20;
+
+IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, unsigned char * out_buf, int len)
 {
+	int channels = 2;
+
 	Sint16 *sbuf = buf;
-	Uint16 *ubuf = buf;
+	Uint16 *ubuf = out_buf;
 
 	int32_t dac0;
 	int32_t dac1;
 
 	if(buf != NULL && len > 0)
-		for(int i = len-2; i >= 0; i-=2)
+		//for(int i = len-2; i >= 0; i-=2)
+		for(int i = 0; i < len; i += 2)
 		{
-			Sint16 range = sbuf[i/2] >> 8; 
+			Sint16 range = (sbuf[i] + sbuf[i+1]) / 2 * global_volume / 100 >> 8 ; 
 
 			// Convert to differential output
 			if (range > 127)
@@ -55,20 +61,23 @@ IRAM_ATTR void updateTask(void *arg)
   {
 	  if(!paused && /*xSemaphoreAudio != NULL*/ !locked ){
 		  //xSemaphoreTake( xSemaphoreAudio, portMAX_DELAY );
-		  memset(sdl_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
+		  memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
+		  memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE);
 		  (*as.callback)(NULL, sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
-		  audioToOdroidGoFormat(sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
-		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, sdl_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 50 / portTICK_PERIOD_MS));
+		  audioToOdroidGoFormat(sdl_buffer, out_buffer, SAMPLECOUNT*SAMPLESIZE);
+		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, out_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 500 / portTICK_PERIOD_MS));
 		  //xSemaphoreGive( xSemaphoreAudio );
-	  } else
-		  vTaskDelay( 2 );
+	  } else {
+		  vTaskDelay( 5 );
+		  printf("Audio locked\n");
+	  }
   }
 }
 
 void SDL_AudioInit()
 {
-	sdl_buffer = heap_caps_malloc(SAMPLECOUNT * SAMPLESIZE * 2, MALLOC_CAP_8BIT);
-
+	sdl_buffer = heap_caps_malloc(SAMPLECOUNT * SAMPLESIZE, MALLOC_CAP_8BIT);
+	out_buffer = heap_caps_malloc(SAMPLECOUNT * SAMPLESIZE * 2, MALLOC_CAP_8BIT);
 	static const i2s_config_t i2s_config = {
 	.mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,
 	.sample_rate = SAMPLERATE,
@@ -76,7 +85,7 @@ void SDL_AudioInit()
 	.channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
 	.communication_format = I2S_COMM_FORMAT_I2S_LSB,
 	.dma_buf_count = 6,
-	.dma_buf_len = 256,
+	.dma_buf_len = SAMPLECOUNT/2,
 	.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,                                //Interrupt level 1
     .use_apll = 0
 	};
