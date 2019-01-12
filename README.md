@@ -9,6 +9,7 @@ Credits:
 --------
 
 Wolf4SDL by Moritz "Ripper" Kroll (http://www.chaos-software.de.vu)
+
 Original Wolfenstein 3D by id Software (http://www.idsoftware.com)
 
 Wolf4SDL is an open-source port of id Software's classic first-person shooter
