@@ -1346,6 +1346,9 @@ IRAM_ATTR void PlayLoop (void)
                 playstate = ex_abort;
             }
         }
+
+            taskYIELD();
+            vTaskDelay( 2 );  // Feed WDT and give audio thread some time to run
     }
     while (!playstate && !startgame);
 

@@ -739,8 +739,9 @@ static void _Eff_position_u16lsb_c6(int chan, void *stream, int len, void *udata
     }
 }
 
-static void _Eff_position_s16lsb(int chan, void *stream, int len, void *udata)
+IRAM_ATTR static void _Eff_position_s16lsb(int chan, void *stream, int len, void *udata)
 {
+    return;
     /* 16 signed bits (lsb) * 2 channels. */
     volatile position_args *args = (volatile position_args *) udata;
     Sint16 *ptr = (Sint16 *) stream;
@@ -1186,7 +1187,7 @@ static position_args *get_position_arg(int channel)
 }
 
 
-static Mix_EffectFunc_t get_position_effect_func(Uint16 format, int channels)
+IRAM_ATTR static Mix_EffectFunc_t get_position_effect_func(Uint16 format, int channels)
 {
     Mix_EffectFunc_t f = NULL;
 

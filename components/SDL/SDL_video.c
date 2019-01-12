@@ -26,7 +26,7 @@ SDL_VideoInfo *SDL_GetVideoInfo(void)
     SDL_VideoInfo *info = malloc(sizeof(SDL_VideoInfo));
     info->hw_available = 0;
     info->wm_available = 0;
-    info->video_mem = 1024*4;
+    info->video_mem = 1024*2;
     info->blit_hw = 0;
     info->blit_hw_CC = 0;
     info->blit_hw_A = 0;

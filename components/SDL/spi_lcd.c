@@ -427,6 +427,7 @@ void IRAM_ATTR displayTask(void *arg) {
 			inProgress--;
 		}
         SDL_UnlockDisplay();
+        taskYIELD();
 	}
 }
 
@@ -481,6 +482,6 @@ void spi_lcd_init() {
 #if CONFIG_FREERTOS_UNICORE
 	xTaskCreatePinnedToCore(&displayTask, "display", 6000, NULL, 6, NULL, 0);
 #else
-	xTaskCreatePinnedToCore(&displayTask, "display", 6000, NULL, 6, NULL, 1);
+	xTaskCreatePinnedToCore(&displayTask, "display", 6000, NULL, 2, NULL, 1);
 #endif
 }

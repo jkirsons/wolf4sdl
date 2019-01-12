@@ -12,7 +12,7 @@ char global_volume = 20;
 
 IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, unsigned char * out_buf, int len)
 {
-	int channels = 2;
+	int channels = 1;
 
 	Sint16 *sbuf = buf;
 	Uint16 *ubuf = out_buf;
@@ -22,9 +22,10 @@ IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, unsigned char * out_bu
 
 	if(buf != NULL && len > 0)
 		//for(int i = len-2; i >= 0; i-=2)
-		for(int i = 0; i < len; i += 2)
+		for(int i = 0; i < len/2; i += 1)
 		{
-			Sint16 range = (sbuf[i] + sbuf[i+1]) / 2 * global_volume / 100 >> 8 ; 
+			Sint16 range = *sbuf * global_volume / 100 >> 8 ; 
+			sbuf += 2;
 
 			// Convert to differential output
 			if (range > 127)
@@ -49,8 +50,8 @@ IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, unsigned char * out_bu
 			dac0 <<= 8;
 			dac1 <<= 8;
 
-			ubuf[i] = (int16_t)dac1;
-			ubuf[i + 1] = (int16_t)dac0;
+			ubuf[i*2] = (int16_t)dac1;
+			ubuf[i*2 + 1] = (int16_t)dac0;
 		}
 }
 
@@ -61,16 +62,17 @@ IRAM_ATTR void updateTask(void *arg)
   {
 	  if(!paused && /*xSemaphoreAudio != NULL*/ !locked ){
 		  //xSemaphoreTake( xSemaphoreAudio, portMAX_DELAY );
-		  memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
-		  memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE);
+		  //memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
+		  //memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE);
 		  (*as.callback)(NULL, sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
 		  audioToOdroidGoFormat(sdl_buffer, out_buffer, SAMPLECOUNT*SAMPLESIZE);
-		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, out_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 500 / portTICK_PERIOD_MS));
+		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, out_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 500 / portTICK_PERIOD_MS /*portMAX_DELAY*/ ));
 		  //xSemaphoreGive( xSemaphoreAudio );
 	  } else {
 		  vTaskDelay( 5 );
 		  printf("Audio locked\n");
 	  }
+	  taskYIELD();
   }
 }
 
@@ -80,12 +82,12 @@ void SDL_AudioInit()
 	out_buffer = heap_caps_malloc(SAMPLECOUNT * SAMPLESIZE * 2, MALLOC_CAP_8BIT);
 	static const i2s_config_t i2s_config = {
 	.mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,
-	.sample_rate = SAMPLERATE,
+	.sample_rate = SAMPLERATE, 
 	.bits_per_sample = SAMPLESIZE*8, /* the DAC module will only take the 8bits from MSB */
 	.channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
 	.communication_format = I2S_COMM_FORMAT_I2S_LSB,
-	.dma_buf_count = 6,
-	.dma_buf_len = SAMPLECOUNT/2,
+	.dma_buf_count = 8,
+	.dma_buf_len = SAMPLECOUNT * SAMPLESIZE,
 	.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,                                //Interrupt level 1
     .use_apll = 0
 	};
@@ -103,14 +105,14 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
 	SDL_AudioInit();
 	memset(obtained, 0, sizeof(SDL_AudioSpec)); 
 	obtained->freq = SAMPLERATE;
-	obtained->format = 16;
-	obtained->channels = 1;
-	obtained->samples = SAMPLECOUNT;
+	obtained->format = desired->format;
+	obtained->channels = desired->channels;
+	obtained->samples = SAMPLECOUNT * SAMPLESIZE;
 	obtained->callback = desired->callback;
 	memcpy(&as,obtained,sizeof(SDL_AudioSpec));  
 
 	//xSemaphoreAudio = xSemaphoreCreateBinary();
-	xTaskCreatePinnedToCore(&updateTask, "updateTask", 10000, NULL, 2, NULL, 1);
+	xTaskCreatePinnedToCore(&updateTask, "updateTask", 10000, NULL, 2, NULL, tskNO_AFFINITY); //tskNO_AFFINITY
 	printf("audio task started\n");
 	return 0;
 }

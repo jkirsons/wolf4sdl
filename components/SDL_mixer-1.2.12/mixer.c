@@ -302,7 +302,7 @@ IRAM_ATTR static void mix_channels(void *udata, Uint8 *stream, int len)
 
 	/* Mix any playing channels... */
 	sdl_ticks = SDL_GetTicks();
-	for ( i=0; i<num_channels; ++i ) {
+		for ( i=0; i<num_channels; ++i ) {
 		if( ! mix_channel[i].paused ) {
 			if ( mix_channel[i].expire > 0 && mix_channel[i].expire < sdl_ticks ) {
 				/* Expiration delay for that channel is reached */
