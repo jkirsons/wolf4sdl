@@ -33,7 +33,7 @@ Firmware:
 
 - Place the <b>Wolf3D.fw</b> file on your Odroid-Go SD card in the /odroid/firmware/ folder.
 - Power off the ODROID-GO, hold B, and power on the ODROID-GO.
-- When the ODROID-GO menu displays, select Duke3D, press A, then press Start.
+- When the ODROID-GO menu displays, select Wolf3D, press A, then press Start.
 
 
 
