@@ -1,0 +1,10 @@
+make CFLAGS=-DVERSIONALREADYCHOSEN=1
+#cd release
+/Applications/ffmpeg -i ./images/Tile.png -f rawvideo -pix_fmt rgb565 ./images/tile.raw
+#~/Documents/GitHub/odroid-go-firmware/tools/mkfw/mkfw Duke3D ./images/tile.raw 0 16 1048576 app ./build/Duke3D.bin
+#rm Duke3D-snd.fw
+#mv firmware.fw Duke3D-snd.fw
+
+~/Documents/GitHub/odroid-go-firmware-20181001/tools/mkfw/mkfw Duke3D ./images/tile.raw 0 16 1048576 app ./build/Duke3D.bin
+rm ./release/Wolf3D.fw
+mv firmware.fw ./release/Wolf3D.fw
