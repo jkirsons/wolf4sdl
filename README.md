@@ -19,21 +19,20 @@ while taking advantage of some improvements.
 Installation:
 -------------
 
-Wolf3D.fw
+<b>Wolfenstein 3D</b>
 
 Game Data:
 
-- You should put the "Wolf3d Full v1.4 GT/ID/Activision" in the folder:
+- Put the game data for Wolfenstein 3D Full v1.4 GT/ID/Activision version in the folder:
     /sd/data/Wolfenstein 3D/base/
 
 Note - this is the same version and folder structure as the Steam version of Wolfenstein 3D.  (https://store.steampowered.com/app/2270/Wolfenstein_3D/)
 
 Firmware:
 
-- Place the Wolf3D.fw file on your Odroid-Go SD card in the /odroid/firmware/ folder.
+- Place the <b>Wolf3D.fw</b> file on your Odroid-Go SD card in the /odroid/firmware/ folder.
 - Power off the ODROID-GO, hold B, and power on the ODROID-GO.
 - When the ODROID-GO menu displays, select Duke3D, press A, then press Start.
-
 
 
 
