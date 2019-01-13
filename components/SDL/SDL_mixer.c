@@ -98,60 +98,11 @@ IRAM_ATTR void SDL_MixAudio (Uint8 *dst, const Uint8 *src, Uint32 len, int volum
 		return;
 	}
 	/* Mix the user-level audio format */
-/*	
-	if ( current_audio ) {
-		if ( current_audio->convert.needed ) {
-			format = current_audio->convert.src_format;
-		} else {
-			format = current_audio->spec.format;
-		}
-	} else {
-*/	
-  		/* HACK HACK HACK */
-		format = AUDIO_S16;
-//	}
+	/* HACK HACK HACK */
+	format = AUDIO_S16;
+
 	switch (format) {
-/*
-		case AUDIO_U8: {
-			Uint8 src_sample;
 
-			while ( len-- ) {
-				src_sample = *src;
-				ADJUST_VOLUME_U8(src_sample, volume);
-				*dst = mix8[*dst+src_sample];
-				++dst;
-				++src;
-			}
-		}
-		break;
-
-		case AUDIO_S8: {
-			Sint8 *dst8, *src8;
-			Sint8 src_sample;
-			int dst_sample;
-			const int max_audioval = ((1<<(8-1))-1);
-			const int min_audioval = -(1<<(8-1));
-
-			src8 = (Sint8 *)src;
-			dst8 = (Sint8 *)dst;
-			while ( len-- ) {
-				src_sample = *src8;
-				ADJUST_VOLUME(src_sample, volume);
-				dst_sample = *dst8 + src_sample;
-				if ( dst_sample > max_audioval ) {
-					*dst8 = max_audioval;
-				} else
-				if ( dst_sample < min_audioval ) {
-					*dst8 = min_audioval;
-				} else {
-					*dst8 = dst_sample;
-				}
-				++dst8;
-				++src8;
-			}
-		}
-		break;
-*/
 		case AUDIO_S16LSB: {
 			Sint16 src1, src2;
 			int dst_sample;

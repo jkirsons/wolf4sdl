@@ -2181,7 +2181,7 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
 		SLOT8_1 = &OPL->P_CH[8].SLOT[SLOT1];
 		SLOT8_2 = &OPL->P_CH[8].SLOT[SLOT2];
 	}
-	for( i=0; i < length ; i++ )
+	for( i=0; i < length * 2 ; i++ )  // *2 for mono buffer
 	{
 		int lt;
 
@@ -2229,12 +2229,12 @@ void YM3812UpdateOne(int which, INT16 *buffer, int length)
         #else
             lt += 128;
         #endif*/
-
-//		buf[i] = lt;
-
+#if 1
+		buf[i] = lt;  // mono version
+#else
 		buf[i*2] = lt;          // stereo version
 		buf[i*2+1] = lt;
-
+#endif
 		advance(OPL);
 	}
 

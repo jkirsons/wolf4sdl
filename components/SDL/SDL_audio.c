@@ -12,7 +12,6 @@ char global_volume = 20;
 
 IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, unsigned char * out_buf, int len)
 {
-	int channels = 1;
 
 	Sint16 *sbuf = buf;
 	Uint16 *ubuf = out_buf;
@@ -22,10 +21,10 @@ IRAM_ATTR void audioToOdroidGoFormat(unsigned char * buf, unsigned char * out_bu
 
 	if(buf != NULL && len > 0)
 		//for(int i = len-2; i >= 0; i-=2)
-		for(int i = 0; i < len/2; i += 1)
+		for(int i = 0; i < (len / 2); i += 1)  
 		{
 			Sint16 range = *sbuf * global_volume / 100 >> 8 ; 
-			sbuf += 2;
+			sbuf += as.channels;
 
 			// Convert to differential output
 			if (range > 127)
@@ -60,19 +59,21 @@ IRAM_ATTR void updateTask(void *arg)
   size_t bytesWritten;
   while(1)
   {
-	  if(!paused && /*xSemaphoreAudio != NULL*/ !locked ){
-		  //xSemaphoreTake( xSemaphoreAudio, portMAX_DELAY );
+	  if(!paused){
 		  //memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE*2);
-		  //memset(out_buffer, 0, SAMPLECOUNT*SAMPLESIZE);
+		  //memset(sdl_buffer, 0, SAMPLECOUNT*SAMPLESIZE);
+		  SDL_LockAudio();
 		  (*as.callback)(NULL, sdl_buffer, SAMPLECOUNT*SAMPLESIZE);
+		  SDL_UnlockAudio();
+
 		  audioToOdroidGoFormat(sdl_buffer, out_buffer, SAMPLECOUNT*SAMPLESIZE);
-		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, out_buffer, SAMPLECOUNT*SAMPLESIZE, &bytesWritten, 500 / portTICK_PERIOD_MS /*portMAX_DELAY*/ ));
-		  //xSemaphoreGive( xSemaphoreAudio );
+		  ESP_ERROR_CHECK(i2s_write(I2S_NUM_0, out_buffer, SAMPLECOUNT*SAMPLESIZE*2, &bytesWritten, 500 / portTICK_PERIOD_MS /*portMAX_DELAY*/ ));
+		  
 	  } else {
 		  vTaskDelay( 5 );
-		  printf("Audio locked\n");
 	  }
 	  taskYIELD();
+	  //vTaskDelay( 1 );
   }
 }
 
@@ -86,7 +87,7 @@ void SDL_AudioInit()
 	.bits_per_sample = SAMPLESIZE*8, /* the DAC module will only take the 8bits from MSB */
 	.channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
 	.communication_format = I2S_COMM_FORMAT_I2S_LSB,
-	.dma_buf_count = 8,
+	.dma_buf_count = 2,
 	.dma_buf_len = SAMPLECOUNT * SAMPLESIZE,
 	.intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,                                //Interrupt level 1
     .use_apll = 0
@@ -111,8 +112,7 @@ int SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained)
 	obtained->callback = desired->callback;
 	memcpy(&as,obtained,sizeof(SDL_AudioSpec));  
 
-	//xSemaphoreAudio = xSemaphoreCreateBinary();
-	xTaskCreatePinnedToCore(&updateTask, "updateTask", 10000, NULL, 2, NULL, tskNO_AFFINITY); //tskNO_AFFINITY
+	xTaskCreatePinnedToCore(&updateTask, "updateTask", 5000, NULL, 2, NULL, tskNO_AFFINITY); //tskNO_AFFINITY
 	printf("audio task started\n");
 	return 0;
 }
@@ -128,32 +128,139 @@ void SDL_CloseAudio(void)
 	  free(sdl_buffer);
 }
 
+/* Duplicate a mono channel to both stereo channels */
+IRAM_ATTR void SDLCALL SDL_ConvertStereo(SDL_AudioCVT *cvt, Uint16 format)
+{
+	int i;
+	if ( (format & 0xFF) == 16 ) {
+		Uint16 *src, *dst;
+
+		src = (Uint16 *)(cvt->buf+cvt->len_cvt);
+		dst = (Uint16 *)(cvt->buf+cvt->len_cvt*2);
+		for ( i=cvt->len_cvt/2; i; --i ) {
+			dst -= 2;
+			src -= 1;
+			dst[0] = src[0];
+			dst[1] = src[0];
+		}
+	} else {
+		Uint8 *src, *dst;
+
+		src = cvt->buf+cvt->len_cvt;
+		dst = cvt->buf+cvt->len_cvt*2;
+		for ( i=cvt->len_cvt; i; --i ) {
+			dst -= 2;
+			src -= 1;
+			dst[0] = src[0];
+			dst[1] = src[0];
+		}
+	}
+	cvt->len_cvt *= 2;
+	if ( cvt->filters[++cvt->filter_index] ) {
+		cvt->filters[cvt->filter_index](cvt, format);
+	}
+}
+
 int SDL_BuildAudioCVT(SDL_AudioCVT *cvt, Uint16 src_format, Uint8 src_channels, int src_rate, Uint16 dst_format, Uint8 dst_channels, int dst_rate)
 {
 	cvt->len_mult = 1;
 	cvt->len = SAMPLECOUNT*SAMPLESIZE*2;
-	return 0;
+	
+	cvt->needed = 0;
+	cvt->filter_index = 0;
+	cvt->filters[0] = NULL;
+	cvt->len_ratio = 1.0;
+
+	/* Last filter:  Mono/Stereo conversion */
+	if ( src_channels != dst_channels ) {
+		if ( (src_channels == 1) && (dst_channels > 1) ) {
+			cvt->filters[cvt->filter_index++] = 
+						SDL_ConvertStereo;
+			cvt->len_mult *= 2;
+			src_channels = 2;
+			cvt->len_ratio *= 2;
+		}
+		while ( (src_channels*2) <= dst_channels ) {
+			cvt->filters[cvt->filter_index++] = 
+						SDL_ConvertStereo;
+			cvt->len_mult *= 2;
+			src_channels *= 2;
+			cvt->len_ratio *= 2;
+		}
+		/* This assumes that 4 channel audio is in the format:
+		     Left {front/back} + Right {front/back}
+		   so converting to L/R stereo works properly.
+		 */
+/*		
+		while ( ((src_channels%2) == 0) &&
+				((src_channels/2) >= dst_channels) ) {
+			cvt->filters[cvt->filter_index++] =
+						 SDL_ConvertMono;
+			src_channels /= 2;
+			cvt->len_ratio /= 2;
+		}
+*/		
+		if ( src_channels != dst_channels ) {
+			/* Uh oh.. */;
+		}
+	}
+	
+	/* Set up the filter information */
+	if ( cvt->filter_index != 0 ) {
+		cvt->needed = 1;
+		cvt->src_format = src_format;
+		cvt->dst_format = dst_format;
+		cvt->len = 0;
+		cvt->buf = NULL;
+		cvt->filters[cvt->filter_index] = NULL;
+	}
+	return(cvt->needed);
 }
 
-int SDL_ConvertAudio(SDL_AudioCVT *cvt)
+IRAM_ATTR int SDL_ConvertAudio(SDL_AudioCVT *cvt)
 {
+#if 0
+	/* Make sure there's data to convert */
+	if ( cvt->buf == NULL ) {
+		SDL_SetError("No buffer allocated for conversion");
+		return(-1);
+	}
+	/* Return okay if no conversion is necessary */
+	cvt->len_cvt = cvt->len;
+	if ( cvt->filters[0] == NULL ) {
+		return(0);
+	}
 
-
+	/* Set up the conversion and go! */
+	cvt->filter_index = 0;
+	cvt->filters[0](cvt, cvt->src_format);
+#endif
 	return 0;
 }
 
 void SDL_LockAudio(void)
 {
-	locked = true;
-	//if( xSemaphoreAudio != NULL )
-	//	xSemaphoreTake( xSemaphoreAudio, 100 );
+    if (xSemaphoreAudio == NULL)
+    {
+        printf("Creating audio mutex.\n");
+        xSemaphoreAudio = xSemaphoreCreateMutex();
+        if (!xSemaphoreAudio) 
+            abort();
+    }
+
+    if (!xSemaphoreTake(xSemaphoreAudio, 5000 / portTICK_RATE_MS))
+    {
+        printf("Timeout waiting for audio lock.\n");
+        abort();
+    }		
 }
 
 void SDL_UnlockAudio(void)
 {
-    locked = false;
-	//if( xSemaphoreAudio != NULL )
-	//	 xSemaphoreGive( xSemaphoreAudio );
+    if (!xSemaphoreAudio) 
+        abort();
+    if (!xSemaphoreGive(xSemaphoreAudio))
+        abort();		 
 }
 
 /*

@@ -668,7 +668,7 @@ void CAL_SetupAudioFile (void)
 void CA_Startup (void)
 {
 #ifdef PROFILE
-    unlink ("PROFILE.TXT");
+    __unlink ("PROFILE.TXT");
     profilehandle =__open("PROFILE.TXT", O_CREAT | O_WRONLY | O_TEXT);
 #endif
 

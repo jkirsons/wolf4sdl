@@ -741,7 +741,7 @@ static void _Eff_position_u16lsb_c6(int chan, void *stream, int len, void *udata
 
 IRAM_ATTR static void _Eff_position_s16lsb(int chan, void *stream, int len, void *udata)
 {
-    return;
+return;
     /* 16 signed bits (lsb) * 2 channels. */
     volatile position_args *args = (volatile position_args *) udata;
     Sint16 *ptr = (Sint16 *) stream;
@@ -1450,7 +1450,7 @@ int Mix_SetPanning(int channel, Uint8 left, Uint8 right)
         return( Mix_SetPosition(channel, angle, 0) );
     }
 
-    f = get_position_effect_func(format, channels);
+    f = get_position_effect_func(format, channels);  
     if (f == NULL)
         return(0);
 

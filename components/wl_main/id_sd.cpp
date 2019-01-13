@@ -968,7 +968,7 @@ longword curAlLengthLeft = 0;
 int soundTimeCounter = 5;
 int samplesPerMusicTick;
 
-void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
+IRAM_ATTR void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
 {
     int stereolen = len>>1;
     int sampleslen = stereolen>>1;
@@ -1040,6 +1040,7 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
             }
         }
         numreadysamples = samplesPerMusicTick;
+        taskYIELD();  // Don't hog the CPU...
     }
 }
 
@@ -1057,7 +1058,7 @@ SD_Startup(void)
     if (SD_Started)
         return;
 
-    if(Mix_OpenAudio(param_samplerate, AUDIO_S16, 2, param_audiobuffer))
+    if(Mix_OpenAudio(param_samplerate, AUDIO_S16, 1, param_audiobuffer))
     {
         printf("Unable to open audio: %s\n", Mix_GetError());
         return;
@@ -1068,7 +1069,7 @@ SD_Startup(void)
 
     // Init music
 
-    samplesPerMusicTick = param_samplerate / 700;    // SDL_t0FastAsmService played at 700Hz
+    samplesPerMusicTick = param_samplerate / 700 / 2;    // SDL_t0FastAsmService played at 700Hz -- /2 for mono
 
     if(YM3812Init(1,3579545,param_samplerate))
     {

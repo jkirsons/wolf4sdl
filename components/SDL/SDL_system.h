@@ -74,5 +74,5 @@ int __close(int fildes);
 ssize_t __read(int fildes, void *buf, size_t nbyte);
 ssize_t __write(int fildes, const void *buf, size_t nbyte);
 off_t __lseek(int fd, off_t offset, int whence);
-
+int __unlink(const char *pathname); 
 #endif

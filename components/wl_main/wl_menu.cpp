@@ -15,6 +15,7 @@
 #endif
 
 #include "wl_def.h"
+#include "wl_main.h"
 #pragma hdrstop
 
 extern int lastgamemusicoffset;
@@ -1706,7 +1707,7 @@ CP_SaveGame (int quick)
             else
                 strcpy(savepath, name);
 
-            unlink (savepath);
+            __unlink (savepath);
             file =__fopen(savepath, "wb");
 
             strcpy (input, &SaveGameNames[which][0]);
@@ -1761,6 +1762,10 @@ CP_SaveGame (int quick)
 
             ShootSnd ();
 
+            if(SaveGameNames[which][0] == NULL)
+            {
+                snprintf(SaveGameNames[which], sizeof(SaveGameNames[which]), "Slot %d", which);
+            }
             strcpy (input, &SaveGameNames[which][0]);
             name[7] = which + '0';
 
@@ -1782,7 +1787,7 @@ CP_SaveGame (int quick)
                 else
                     strcpy(savepath, name);
 
-                unlink (savepath);
+                __unlink (savepath);
                 file =__fopen(savepath, "wb");
                 __fwrite(input, 32, 1, file);
                 __fseek(file, 32, SEEK_SET);
@@ -2887,7 +2892,7 @@ CP_ChangeView (int)
     MenuFadeOut ();
     if(screenHeight % 200 != 0)
         VL_ClearScreen(0);
-
+    WriteConfig ();  // Save config
     return 0;
 }
 
@@ -3431,6 +3436,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
     item_i->curpos = which;
 
     lastitem = which;
+    WriteConfig ();  // Save config
     switch (exit)
     {
         case 1:

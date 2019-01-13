@@ -253,3 +253,11 @@ off_t __lseek(int fd, off_t offset, int whence)
 	SDL_UnlockDisplay();
 	return ret;	
 }
+
+int __unlink(const char *pathname)
+{
+	SDL_LockDisplay();
+	int ret = unlink(pathname);
+	SDL_UnlockDisplay();
+	return ret;		
+}

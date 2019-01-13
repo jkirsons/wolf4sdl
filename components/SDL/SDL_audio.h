@@ -15,18 +15,19 @@
 #define SAMPLERATE		7042 * 1	// Hz
 #define SAMPLESIZE		2   	// 16bit
 
-typedef struct{
-  int needed;
-  Uint16 src_format;
-  Uint16 dest_format;
-  double rate_incr;
-  Uint8 *buf;
-  int len;
-  int len_cvt;
-  int len_mult;
-  double len_ratio;
-  //void (*filters[10])(struct SDL_AudioCVT *cvt, Uint16 format);
-  int filter_index;
+/** A structure to hold a set of audio conversion filters and buffers */
+typedef struct SDL_AudioCVT {
+	int needed;			/**< Set to 1 if conversion possible */
+	Uint16 src_format;		/**< Source audio format */
+	Uint16 dst_format;		/**< Target audio format */
+	double rate_incr;		/**< Rate conversion increment */
+	Uint8 *buf;			/**< Buffer to hold entire audio data */
+	int    len;			/**< Length of original audio buffer */
+	int    len_cvt;			/**< Length of converted audio buffer */
+	int    len_mult;		/**< buffer must be len*len_mult big */
+	double len_ratio; 	/**< Given len, final size is len*len_ratio */
+	void (SDLCALL *filters[10])(struct SDL_AudioCVT *cvt, Uint16 format);
+	int filter_index;		/**< Current audio conversion function */
 } SDL_AudioCVT;
 
 typedef struct{

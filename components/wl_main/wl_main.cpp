@@ -1307,7 +1307,7 @@ static void InitGame()
 //
 // draw intro screen stuff
 //
-    IntroScreen ();
+    //IntroScreen ();
 
 #ifdef _arch_dreamcast
     //TODO: VMU Selection Screen
@@ -1330,10 +1330,10 @@ static void InitGame()
 // initialize variables
 //
     InitRedShifts ();
-#ifndef SPEARDEMO
-    if(!didjukebox)
-#endif
-        FinishSignon();
+//#ifndef SPEARDEMO
+//    if(!didjukebox)
+//#endif
+//        FinishSignon();
 
 #ifdef NOTYET
     vdisp = (byte *) (0xa0000+PAGE1START);
