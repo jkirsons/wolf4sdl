@@ -25,7 +25,7 @@ Installation:
 Game Data:
 
 - Put the game data for Wolfenstein 3D Full v1.4 GT/ID/Activision version in the folder:
-    /sd/data/Wolfenstein 3D/base/
+SD Card: /data/Wolfenstein 3D/base/
 
 Note - this is the same version and folder structure as the Steam version of Wolfenstein 3D.  (https://store.steampowered.com/app/2270/Wolfenstein_3D/)
 
