@@ -75,7 +75,7 @@ boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
 
-char    configdir[256] = "/sd/data/Wolfenstein 3D/base";
+char    configdir[256] = DATADIR; //"/sd/data/Wolfenstein 3D/base";
 char    configname[13] = "config.";
 
 //
@@ -1948,6 +1948,9 @@ void CheckParameters(int argc, char *argv[])
 
 int main (int argc, char *argv[])
 {
+    // Remove trailing slash
+    configdir[strlen(configdir)-1] = '\0';
+
     SDL_Init(SDL_INIT_VIDEO);
     SDL_Delay(100);
     spi_lcd_clear();
