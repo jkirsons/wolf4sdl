@@ -36,6 +36,22 @@ Firmware:
 - When the ODROID-GO menu displays, select Wolf3D, press A, then press Start.
 
 
+<b>Spear of Destiny</b>
+
+Game Data:
+
+- Put the game data for Spear of Destiny Full and Mission Disks in the folder:
+SD Card: /data/Spear Of Destiny/base/
+
+Note - this is the same version and folder structure as the Steam version of Spear Of Destiny.  (https://store.steampowered.com/app/9000/Spear_of_Destiny/)
+
+Firmware:
+
+- Place the <b>Spear Of Destiny.fw</b> file on your Odroid-Go SD card in the /odroid/firmware/ folder.
+- Power off the ODROID-GO, hold B, and power on the ODROID-GO.
+- When the ODROID-GO menu displays, select Spear Of Destiny, press A, then press Start.
+
+
 
 Licenses:
 ---------
