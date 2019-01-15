@@ -26,7 +26,7 @@ extern "C"
 =============================================================================
 */
 
-extern EXT_RAM_ATTR byte signon[];
+//extern EXT_RAM_ATTR byte signon[];
 
 /*
 =============================================================================
@@ -840,8 +840,8 @@ void SignonScreen (void)                        // VGA version
 {
     VL_SetVGAPlaneMode ();
 
-    VL_MungePic ((byte *)signon,320,200);
-    VL_MemToScreen ((byte *)signon,320,200,0,0);
+    //VL_MungePic ((byte *)signon,320,200);
+    //VL_MemToScreen ((byte *)signon,320,200,0,0);
 }
 
 
@@ -1286,6 +1286,10 @@ static void InitGame()
 //
 // build some tables
 //
+//heap_caps_print_heap_info(MALLOC_CAP_SPIRAM);
+//heap_caps_print_heap_info(MALLOC_CAP_INTERNAL);
+//SDL_Delay(500);
+
     InitDigiMap ();
 
     ReadConfig ();

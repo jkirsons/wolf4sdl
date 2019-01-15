@@ -348,6 +348,7 @@ void VL_FadeOut (int start, int end, int red, int green, int blue, int steps)
 
 		//if(!usedoublebuffering || screenBits == 8) VL_WaitVBL(1);
 		VL_SetPalette (palette2, true);
+        vTaskDelay(1);
 	}
 
 //
@@ -392,6 +393,7 @@ void VL_FadeIn (int start, int end, SDL_Color *palette, int steps)
 
 		//if(!usedoublebuffering || screenBits == 8) VL_WaitVBL(1);
 		VL_SetPalette(palette2, true);
+        vTaskDelay(1);
 	}
 
 //

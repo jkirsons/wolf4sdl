@@ -570,7 +570,7 @@ Mix_Chunk *Mix_LoadWAV_RW(SDL_RWops *src, int freesrc)
 	/* Allocate the chunk memory */
 	chunk = (Mix_Chunk *)SDL_malloc(sizeof(Mix_Chunk));
 	if ( chunk == NULL ) {
-		SDL_SetError("Out of memory");
+		SDL_SetError("Out of memory - Mix_Chunk");
 		if ( freesrc ) {
 			SDL_RWclose(src);
 		}

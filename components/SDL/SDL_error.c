@@ -112,7 +112,7 @@ SDL_SetError(const char *fmt, ...)
 
     /* If we are in debug mode, print out an error message */
     SDL_LogError(SDL_LOG_CATEGORY_ERROR, "%s", SDL_GetError());
-
+printf("SDL Error: %s\n", SDL_GetError());
     return -1;
 }
 

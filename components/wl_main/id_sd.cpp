@@ -586,6 +586,7 @@ void SD_PrepareSound(int which)
 
     SoundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer,
         sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
+    free(wavebuffer);
 }
 
 int SD_PlayDigitized(word which,int leftpos,int rightpos)

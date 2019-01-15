@@ -8,6 +8,8 @@ typedef struct {
 } GPIOKeyMap;
 
 int keyMode = 1;
+int weaponToggle = 1;
+
 //Mappings from buttons to keys
 #ifdef CONFIG_HW_ODROID_GO
 static const GPIOKeyMap keymap[2][6]={{
@@ -154,7 +156,40 @@ int readOdroidXY(SDL_Event * event)
 
     for(int i = 0; i < 6; i++)
         if(checkPinStruct(i, &lastState.buttons[i], event))
+        {
+            // cycle weapons
+            if(keyMode == 0 && event->key.keysym.sym == SDLK_RETURN)
+            {
+                switch(weaponToggle)
+                {
+                    case 1:
+                        event->key.keysym.scancode = SDL_SCANCODE_1;
+                        event->key.keysym.sym = SDLK_1;
+                        break;
+                    case 2:
+                        event->key.keysym.scancode = SDL_SCANCODE_2;
+                        event->key.keysym.sym = SDLK_2;
+                        break;
+                    case 3:
+                        event->key.keysym.scancode = SDL_SCANCODE_3;
+                        event->key.keysym.sym = SDLK_3;
+                        break;
+                    case 4:
+                        event->key.keysym.scancode = SDL_SCANCODE_4;
+                        event->key.keysym.sym = SDLK_4;      
+                        break;                                                                  
+                }
+                
+                if(event->key.type == SDL_KEYUP)
+                {
+                    printf("cycle weapon %d, %d\n", weaponToggle, event->key.keysym.sym);
+                    weaponToggle++;
+                    if(weaponToggle > 4)
+                        weaponToggle = 1;
+                }
+            }
             return 1;
+        }
 
     return 0;
 }
