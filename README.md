@@ -25,6 +25,7 @@ Installation:
 Game Data:
 
 - Put the game data for Wolfenstein 3D Full v1.4 GT/ID/Activision version in the folder:
+
 SD Card: /data/Wolfenstein 3D/base/
 
 Note - this is the same version and folder structure as the Steam version of Wolfenstein 3D.  (https://store.steampowered.com/app/2270/Wolfenstein_3D/)
@@ -51,6 +52,10 @@ Firmware:
 - Power off the ODROID-GO, hold B, and power on the ODROID-GO.
 - When the ODROID-GO menu displays, select Spear Of Destiny, press A, then press Start.
 
+Mission Packs:
+
+- Hold Select during power on for Mission 2: Return to Danger
+- Hold Start during power on for Mission 3: Ultimate Challenge
 
 
 Licenses:
