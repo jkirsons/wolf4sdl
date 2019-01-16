@@ -4105,34 +4105,43 @@ CheckForEpisodes (void)
 
 #ifdef SPEAR
 #ifndef SPEARDEMO
-    if(param_mission == 0)
+
+    IN_ProcessEvents();
+    if(param_mission == 1 || Keyboard[sc_N])
     {
-        if(!__stat(DATADIR "vswap.sod", &statbuf))
-            strcpy (extension, "sod");
-        else
-            Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-    }
-    else if(param_mission == 1)
-    {
+        param_mission = 1; 
+        printf("Mission 1\n");
         if(!__stat(DATADIR "vswap.sd1", &statbuf))
             strcpy (extension, "sd1");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
-    else if(param_mission == 2)
+    else if(param_mission == 2 || Keyboard[sc_Y])
     {
+        param_mission = 2; 
+        printf("Mission 2\n");
         if(!__stat(DATADIR "vswap.sd2", &statbuf))
             strcpy (extension, "sd2");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
     }
-    else if(param_mission == 3)
+    else if(param_mission == 3 || Keyboard[sc_Escape])
     {
+        param_mission = 3; 
+        printf("Mission 3\n");
         if(!__stat(DATADIR "vswap.sd3", &statbuf))
             strcpy (extension, "sd3");
         else
             Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
-    }
+    } 
+    else if(param_mission == 0)
+    {
+        printf("Mission 0\n");
+        if(!__stat(DATADIR "vswap.sod", &statbuf))
+            strcpy (extension, "sod");
+        else
+            Quit ("NO SPEAR OF DESTINY DATA FILES TO BE FOUND!");
+    }    
     else
         Quit ("UNSUPPORTED MISSION!");
     strcpy (graphext, "sod");

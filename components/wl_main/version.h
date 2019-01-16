@@ -4,12 +4,12 @@
 #ifndef VERSIONALREADYCHOSEN              // used for batch compiling
 
 #ifndef DATADIR
-#define DATADIR "/sd/data/Wolfenstein 3D/base/"
+#define DATADIR "/sd/data/Spear Of Destiny/base/"
 #endif
 
 /* Defines used for different versions */
 
-//#define SPEAR
+#define SPEAR
 //#define SPEARDEMO
 //#define UPLOAD
 #define GOODTIMES
