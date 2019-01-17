@@ -57,6 +57,20 @@ Mission Packs:
 - Hold Select during power on for Mission 2: Return to Danger
 - Hold Start during power on for Mission 3: Ultimate Challenge
 
+Sample folder format for the mission packs:
+```
+/data/Spear Of Destiny/base/vswap.sod
+/data/Spear Of Destiny/base/vswap.sd1
+/data/Spear Of Destiny/base/vswap.sd2
+
+/data/Spear Of Destiny/base/gamemaps.sod
+/data/Spear Of Destiny/base/gamemaps.sd1
+/data/Spear Of Destiny/base/gamemaps.sd2
+
+/data/Spear Of Destiny/base/maphead.sod
+/data/Spear Of Destiny/base/maphead.sd1
+/data/Spear Of Destiny/base/maphead.sd2
+```
 
 Licenses:
 ---------
